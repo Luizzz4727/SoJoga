@@ -5,7 +5,7 @@ Projeto SoJoga
 ...
 
 ## 🛠️ Construído com
-* React-Native
+* HTML - CSS - JavaScript
 * Laravel-PHP
 * MySQL
 * Docker
