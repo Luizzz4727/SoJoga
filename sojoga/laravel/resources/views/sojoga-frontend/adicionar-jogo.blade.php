@@ -11,14 +11,6 @@
         <h1>Adicionar Jogo</h1>
         <div class="select-adc-jogo">
             <select>
-                <option selected>Escolha uma categoria</option>
-                <option value="volvo">MOBA</option>
-                <option value="saab">Battle Royale</option>
-                <option value="mercedes">FPS</option>
-            </select>
-        </div>
-        <div class="select-adc-jogo">
-            <select>
                 <option selected>Escolha um Jogo</option>
                 <option value="volvo">League of Legends</option>
                 <option value="saab">Fortnite</option>

@@ -22,6 +22,22 @@
                 <input type="email" id="email" name="email">
             </div>
             <div>
+                <label for="whatsapp">Whatsapp:</label>
+                <input type="text" id="whatsapp" name="whatsapp" placeholder="wa.me/5511912345678">
+            </div>
+            <div>
+                <label for="facebook">Facebook:</label>
+                <input type="text" id="facebook" name="facebook" placeholder="www.facebook.com/seu_usuario">
+            </div>
+            <div>
+                <label for="instagram">Instagram:</label>
+                <input type="text" id="instagram" name="instagram" placeholder="www.instagram.com/seu_usuario">
+            </div>
+            <div>
+                <label for="twitter">Twitter:</label>
+                <input type="text" id="twitter" name="twitter" placeholder="twitter.com/seu_usuario">
+            </div>
+            <div>
                 <label for="password">Senha:</label>
                 <input type="password" id="password" name="password">
             </div>

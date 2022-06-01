@@ -24,6 +24,15 @@
                 <a href="#"><img src="src/img/valorant.svg"></a>
             </div>
         </div>
+        <div class="contatos">
+            <h2>Contato</h2>
+            <div class="imgs-contato">
+                <a href="#"><img src="src/img/facebook.png"></a>
+                <a href="#"><img src="src/img/instagram.png"></a>
+                <a href="#"><img src="src/img/whatsapp.svg"></a>
+                <a href="#"><img src="src/img/twitter.svg"></a>
+            </div>
+        </div>
         <div href="#" class="adc-jogo">ADICIONAR JOGO</div>
     </div>
 

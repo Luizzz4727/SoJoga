@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('frontend', function () {
-    return view('sojoga-frontend.perfil');
+    return view('sojoga-frontend.pesquisar-jogadores');
 })->name('frontend');
 
 Route::get('/', function () {
