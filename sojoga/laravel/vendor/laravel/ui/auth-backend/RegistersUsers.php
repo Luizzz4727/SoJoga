@@ -29,7 +29,24 @@ trait RegistersUsers
      */
     public function register(Request $request)
     {
-        $this->validator($request->all())->validate();
+        ($request['whatsapp'] != '') ? $validation = "celular_com_ddd" : $validation = "";
+
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'nickname' => 'required|string|max:255|unique:users',
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'whatsapp' => $validation,
+            'facebook' => 'max:255',
+            'instagram' => 'max:255',
+            'twitter' => 'max:255',            
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ], [
+            'celular_com_ddd' => 'Digite um telefone válido',
+            'required' => 'Campo obrigatório',
+            'unique' => 'Já está sendo utilizado',
+            'confirmed' => 'Senhas diferentes',
+            'min' => 'Mínimo de 8 caracteres'
+        ]);
 
         event(new Registered($user = $this->create($request->all())));
 

@@ -34,6 +34,7 @@ class ComposerStaticInitf6f330c8bd2441c4fdebef7eae6275aa
         'ec07570ca5a812141189b1fa81503674' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
         '320163ac6b93aebe3dc25b60a0533d56' => __DIR__ . '/..' . '/spatie/laravel-ignition/src/helpers.php',
         '377b22b161c09ed6e5152de788ca020a' => __DIR__ . '/..' . '/spatie/laravel-permission/src/helpers.php',
+        '8fde5feda9697fe0ee53a3938c839fb0' => __DIR__ . '/../..' . '/app/Helpers/Helper.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -539,6 +540,7 @@ class ComposerStaticInitf6f330c8bd2441c4fdebef7eae6275aa
     public static $classMap = array (
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
+        'App\\Helpers\\Helper' => __DIR__ . '/../..' . '/app/Helpers/Helper.php',
         'App\\Http\\Controllers\\Auth\\ConfirmPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ConfirmPasswordController.php',
         'App\\Http\\Controllers\\Auth\\ForgotPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ForgotPasswordController.php',
         'App\\Http\\Controllers\\Auth\\LoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/LoginController.php',
@@ -559,13 +561,11 @@ class ComposerStaticInitf6f330c8bd2441c4fdebef7eae6275aa
         'App\\Models\\Categoria' => __DIR__ . '/../..' . '/app/Models/Categoria.php',
         'App\\Models\\Conquista' => __DIR__ . '/../..' . '/app/Models/Conquista.php',
         'App\\Models\\Historico' => __DIR__ . '/../..' . '/app/Models/Historico.php',
-        'App\\Models\\Mensagem' => __DIR__ . '/../..' . '/app/Models/Mensagem.php',
         'App\\Models\\Mensagens' => __DIR__ . '/../..' . '/app/Models/Mensagens.php',
         'App\\Models\\Preferencia' => __DIR__ . '/../..' . '/app/Models/Preferencia.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
         'App\\Models\\UserConquista' => __DIR__ . '/../..' . '/app/Models/UserConquista.php',
         'App\\Models\\UserHistorico' => __DIR__ . '/../..' . '/app/Models/UserHistorico.php',
-        'App\\Models\\UserMensagens' => __DIR__ . '/../..' . '/app/Models/UserMensagens.php',
         'App\\Models\\UserPreferencia' => __DIR__ . '/../..' . '/app/Models/UserPreferencia.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'App\\Providers\\AuthServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AuthServiceProvider.php',
@@ -686,6 +686,7 @@ class ComposerStaticInitf6f330c8bd2441c4fdebef7eae6275aa
         'Cron\\MonthField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/MonthField.php',
         'Database\\Factories\\UserFactory' => __DIR__ . '/../..' . '/database/factories/UserFactory.php',
         'Database\\Seeders\\DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeders/DatabaseSeeder.php',
+        'Database\\Seeders\\UserSeeder' => __DIR__ . '/../..' . '/database/seeders/UserSeeder.php',
         'DeepCopy\\DeepCopy' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/DeepCopy.php',
         'DeepCopy\\Exception\\CloneException' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/Exception/CloneException.php',
         'DeepCopy\\Exception\\PropertyException' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/Exception/PropertyException.php',

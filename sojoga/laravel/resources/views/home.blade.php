@@ -1,23 +1,23 @@
-@extends('layouts.app')
+@extends('sojoga-frontend.layouts.app')
+
+@section('title', 'SoJoga - Home')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
 
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
+    @include('sojoga-frontend._partials.header')
 
-                    {{ __('You are logged in!') }}
-                </div>
-            </div>
+    <div class="listaJogos">
+        <h1>Jogos Disponíveis</h1>
+        <div class="catalogo-jogos">
+            <h2>Fortnite</h2>
+            <div class="img-jogo"><img src="{{ asset('src/img/fortnite.jpg') }}"></div>
+        </div>
+        <div class="catalogo-jogos">
+            <h2>League Of Legends</h2>
+            <div class="img-jogo"><img src="{{ asset('src/img/leagueoflegends.jpg') }}"></div>
         </div>
     </div>
-</div>
+    
+    @include('sojoga-frontend._partials.footer')
+
 @endsection

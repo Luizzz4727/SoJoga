@@ -72,6 +72,8 @@ trait AuthenticatesUsers
         $request->validate([
             $this->username() => 'required|string',
             'password' => 'required|string',
+        ], [
+            'required' => 'Campo obrigatório'
         ]);
     }
 
@@ -143,7 +145,7 @@ trait AuthenticatesUsers
     protected function sendFailedLoginResponse(Request $request)
     {
         throw ValidationException::withMessages([
-            $this->username() => [trans('auth.failed')],
+            $this->username() => [trans('Usuário ou Senha incorretos!')],
         ]);
     }
 

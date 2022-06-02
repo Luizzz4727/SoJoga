@@ -14,4 +14,6 @@ class UserPreferencia extends Model
         'preferencia_id'
     ];
 
+    public $timestamps = false;
+
 }

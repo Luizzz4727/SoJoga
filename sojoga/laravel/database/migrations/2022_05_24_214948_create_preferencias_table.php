@@ -16,7 +16,8 @@ return new class extends Migration
         Schema::create('preferencias', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('conquista_id')->constrained()->cascadeOnDelete();
+            $table->string('img');
+            // $table->foreignId('conquista_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

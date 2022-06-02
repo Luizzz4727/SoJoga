@@ -11,7 +11,8 @@ class Preferencia extends Model
 
     protected $fillable = [
         'name',
-        'conquista_id'
+        'img'
+        // 'conquista_id'
     ];
 
 }
