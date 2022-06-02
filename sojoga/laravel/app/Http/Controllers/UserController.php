@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\UserPreferencia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -49,9 +50,15 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::where('id', $id)->first();
+
+        if($user === NULL){
+            abort(404);
+        }
+
         $preferencias = UserPreferencia::join('preferencias', 'user_preferencias.preferencia_id', '=', 'preferencias.id')->where('user_preferencias.user_id', $id)->get()->toArray();
-        
-        return view('sojoga-frontend.perfil', compact('user', 'preferencias', 'id'));
+        $userLogadoId = Auth::user()->id;
+
+        return view('sojoga-frontend.perfil', compact('user', 'preferencias', 'id', 'userLogadoId'));
     }
 
     /**
@@ -62,7 +69,17 @@ class UserController extends Controller
      */
     public function edit($id)
     {
+        $userLogadoId = Auth::user()->id;
         $user = User::where('id', $id)->first();
+
+        if($user === NULL){
+            abort(404);
+        }
+
+        if($userLogadoId != $id){
+            abort(403);
+        }
+
         return view('sojoga-frontend.editar-usuario', compact('user', 'id'));
     }
 

@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\FindUsersController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PlayersController;
 use App\Http\Controllers\PreferenciaController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
@@ -32,7 +32,8 @@ Route::group(['middleware' => ['auth']], function() {
 
     Route::resource('users', UserController::class);
     Route::resource('jogos', PreferenciaController::class);
-    Route::resource('pesquisar-jogadores', FindUsersController::class);
+    Route::resource('jogadores', PlayersController::class);
+    Route::any('jogadores/search', [PlayersController::class, 'search'])->name('jogadores.search');
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 });

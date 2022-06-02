@@ -16,10 +16,10 @@ class PreferenciaController extends Controller
      */
     public function index()
     {
-        $id = Auth::user()->id;
+        $userLogadoId = Auth::user()->id;
         $jogos = Preferencia::get()->toArray();
 
-        return view('sojoga-frontend.adicionar-jogo', compact('jogos', 'id'));
+        return view('sojoga-frontend.adicionar-jogo', compact('jogos', 'userLogadoId'));
     }
 
     /**

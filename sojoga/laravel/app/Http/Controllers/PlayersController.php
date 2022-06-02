@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Preferencia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
-class FindUsersController extends Controller
+class PlayersController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,8 +16,29 @@ class FindUsersController extends Controller
      */
     public function index()
     {
-        $id = Auth::user()->id;
-        return view('sojoga-frontend.pesquisar-jogadores', compact('id'));
+        $userLogadoId = Auth::user()->id;
+        return view('sojoga-frontend.pesquisar-jogadores', compact('userLogadoId'));
+    }
+
+    public function search(Request $request)
+    {
+        $userLogadoId = Auth::user()->id;
+
+        $filters = $request->except('_token');
+
+        $dados = DB::table('users')->select('users.id', 'users.name as username', 'preferencias.name')
+                            ->join('user_preferencias', 'users.id', '=', 'user_preferencias.user_id')
+                            ->join('preferencias', 'user_preferencias.preferencia_id', '=', 'preferencias.id')
+                            ->where('preferencias.name', 'like', "%{$request->search}%")
+                            ->orWhere('preferencias.img', 'like', "%{$request->search}%")
+                            // ->toSql();
+                            ->get()->toArray();
+
+        // $dados = Preferencia::join('user_preferencias', 'preferencias.id', '=', 'user_preferencias.preferencia_id')->join('users', 'user_preferencias.user_id', '=', 'users.id')->where('preferencias.name', 'like', "%{$request->search}%")->orWhere('preferencias.img', 'like', "%{$request->search}%")->get()->toArray();
+        
+        // dd($dados);
+
+        return view('sojoga-frontend.pesquisar-jogadores', compact('dados', 'filters', 'userLogadoId'));
     }
 
     /**

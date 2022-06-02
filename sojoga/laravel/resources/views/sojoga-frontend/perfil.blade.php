@@ -13,7 +13,10 @@
     <div class="perfil">
         <h1>{{ $user->name }}</h1>
         <div class="img-perfil"><img src="{{ asset('src/img/pugcornio.svg') }}"></div>
-        <a class="edit-perfil" href="{{ route('users.edit', $id) }}">EDITAR PERFIL</a>
+        @if ($userLogadoId == $id)
+            <a class="edit-perfil" href="{{ route('users.edit', $id) }}">EDITAR PERFIL</a>
+        @endif
+        
         <div class="jogos">
             <h2>JOGOS</h2>
             <div class="imgs-jogos">
@@ -56,13 +59,14 @@
             </div>
         </div>
 
+        @if ($userLogadoId == $id)
         <a href="{{ route("jogos.index") }}" class="adc-jogo">ADICIONAR JOGO</a>
 
         <form action="{{ route("logout") }}" method="post">
             @csrf
             <button type="submit" class="adc-jogo">Sair</button>
         </form>
-
+        @endif
 
     </div>
 
