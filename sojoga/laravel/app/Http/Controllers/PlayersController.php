@@ -31,12 +31,7 @@ class PlayersController extends Controller
                             ->join('preferencias', 'user_preferencias.preferencia_id', '=', 'preferencias.id')
                             ->where('preferencias.name', 'like', "%{$request->search}%")
                             ->orWhere('preferencias.img', 'like', "%{$request->search}%")
-                            // ->toSql();
                             ->get()->toArray();
-
-        // $dados = Preferencia::join('user_preferencias', 'preferencias.id', '=', 'user_preferencias.preferencia_id')->join('users', 'user_preferencias.user_id', '=', 'users.id')->where('preferencias.name', 'like', "%{$request->search}%")->orWhere('preferencias.img', 'like', "%{$request->search}%")->get()->toArray();
-        
-        // dd($dados);
 
         return view('sojoga-frontend.pesquisar-jogadores', compact('dados', 'filters', 'userLogadoId'));
     }

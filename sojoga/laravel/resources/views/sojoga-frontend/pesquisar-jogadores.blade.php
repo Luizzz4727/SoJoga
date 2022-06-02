@@ -8,16 +8,14 @@
 
     <div class="pesquisar-jogadores">
         <div class="pesquisa">
-            <div>
-                <form action="{{ route('jogadores.search') }}" method="POST">
-                    @csrf
-                    <input type="text" name="search" value="{{ $filters['search'] ?? '' }}" placeholder="Digite o nome do jogo">
-                    <button type="submit"><img src="{{ asset('src/img/search.svg') }}"></button>
-                </form>
-            </div>
+            <form action="{{ route('jogadores.search') }}" method="POST">
+                @csrf
+                <input type="text" name="search" value="{{ $filters['search'] ?? '' }}" placeholder="Digite o nome do jogo">
+                <button type="submit"><img src="{{ asset('src/img/search.svg') }}"></button>
+            </form>
         </div>
 
-        @if (!empty($dados))
+        @if (!empty($dados) && $filters['search'] != "")
             
         <div class="com-pesquisa">
             <h1>Resultados de "{{ $filters['search'] }}"</h1>
@@ -35,24 +33,6 @@
                     </div>
 
                 @endforeach
-
-                
-                {{-- <div class="jogador">
-                    <img src="src/img/jogador2.svg">
-                    <div class="contexto-pes-jog">
-                        <h2>Campeão Gamer</h2>
-                        <p>League of Legends</p>
-                        <div class="ver-perfil"><a href="#" >VER PERFIL</a></div>
-                    </div>
-                </div>
-                <div class="jogador">
-                    <img src="src/img/jogador3.svg">
-                    <div class="contexto-pes-jog">
-                        <h2>Unicórnio Gamer</h2>
-                        <p>League of Legends</p>
-                        <div class="ver-perfil"><a href="#" >VER PERFIL</a></div>
-                    </div>
-                </div> --}}
             </div>
         </div>
 

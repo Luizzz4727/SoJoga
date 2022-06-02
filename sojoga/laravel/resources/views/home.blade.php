@@ -16,6 +16,10 @@
             <h2>League Of Legends</h2>
             <div class="img-jogo"><img src="{{ asset('src/img/leagueoflegends.jpg') }}"></div>
         </div>
+        <div class="catalogo-jogos">
+            <h2>Valorant</h2>
+            <div class="img-jogo"><img src="{{ asset('src/img/Valorant.jpg') }}"></div>
+        </div>
     </div>
     
     @include('sojoga-frontend._partials.footer')

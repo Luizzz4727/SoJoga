@@ -25,7 +25,7 @@
                         <img src="{{ asset($item['img']) }}">
                     @endforeach
                 @else
-                    Não há jogos ainda...
+                    <p>Não há jogos ainda...</p>
                 @endif
                 
                 
@@ -37,22 +37,22 @@
 
                 @if ($user->facebook != NULL || $user->instagram != NULL || $user->whatsapp != NULL || $user->twitter != NULL)
                     @if ($user->facebook != NULL)
-                        <a href="{{ $user->facebook }}"><img src="{{ asset('src/img/facebook.png') }}"></a>
+                        <a href="https://{{ $user->facebook }}"><img src="{{ asset('src/img/facebook.png') }}"></a>
                     @endif
 
                     @if ($user->instagram != NULL)
-                        <a href="{{ $user->instagram }}"><img src="{{ asset('src/img/instagram.png') }}"></a>
+                        <a href="https://{{ $user->instagram }}"><img src="{{ asset('src/img/instagram.png') }}"></a>
                     @endif
 
                     @if ($user->whatsapp != NULL)
-                        <a href="wa.me/55{{ Helper::removeSpecialCharacters($user->whatsapp) }}"><img src="{{ asset('src/img/whatsapp.svg') }}"></a>
+                        <a href="https://wa.me/55{{ Helper::removeSpecialCharacters($user->whatsapp) }}"><img src="{{ asset('src/img/whatsapp.svg') }}"></a>
                     @endif
 
                     @if ($user->twitter != NULL)
-                        <a href="{{ $user->twitter }}"><img src="{{ asset('src/img/twitter.svg') }}"></a>
+                        <a href="https://{{ $user->twitter }}"><img src="{{ asset('src/img/twitter.svg') }}"></a>
                     @endif
                 @else
-                    Não há contatos ainda...
+                    <p>Não há contatos ainda...</p>
                 @endif
                 
                 
@@ -64,7 +64,7 @@
 
         <form action="{{ route("logout") }}" method="post">
             @csrf
-            <button type="submit" class="adc-jogo">Sair</button>
+            <button type="submit" class="sair">Sair</button>
         </form>
         @endif
 

@@ -27,8 +27,8 @@
                 {{-- <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" required autocomplete="email" autofocus> --}}
 
                 @error('email')
-                    <span>
-                        <strong>{{ $message }}</strong>
+                    <span class="validacao">
+                        <strong >{{ $message }}</strong>
                     </span>
                 @enderror
                 
@@ -36,7 +36,7 @@
                 <input type="password" id="password" name="password" placeholder="Senha">
                 
                 @error('password')
-                    <span>
+                    <span class="validacao">
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror

@@ -18,7 +18,7 @@
                 <label for="name">Nome:</label>
                 <input type="text" id="name" name="name" value="{{ old('name') ?? $user->name }}" required>
                 @error('name')
-                    <span>
+                    <span class="validacao">
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
@@ -27,7 +27,7 @@
                 <label for="nickname">Nick:</label>
                 <input type="text" id="nickname" name="nickname" value="{{ old('nickname') ?? $user->nickname }}" required>
                 @error('nickname')
-                    <span>
+                    <span class="validacao">
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
@@ -36,7 +36,7 @@
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" value="{{ old('email') ?? $user->email }}" required>
                 @error('email')
-                    <span>
+                    <span class="validacao">
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
@@ -45,7 +45,7 @@
                 <label for="whatsapp">Whatsapp:</label>
                 <input type="text" id="whatsapp" name="whatsapp" placeholder="(00) 00000-0000" value="{{ old('whatsapp') ?? $user->whatsapp }}">
                 @error('whatsapp')
-                    <span>
+                    <span class="validacao">
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
@@ -54,7 +54,7 @@
                 <label for="facebook">Facebook:</label>
                 <input type="text" id="facebook" name="facebook" placeholder="www.facebook.com/seu_usuario" value="{{ old('facebook') ?? $user->facebook }}">
                 @error('facebook')
-                    <span>
+                    <span class="validacao">
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
@@ -63,7 +63,7 @@
                 <label for="instagram">Instagram:</label>
                 <input type="text" id="instagram" name="instagram" placeholder="www.instagram.com/seu_usuario" value="{{ old('instagram') ?? $user->instagram }}">
                 @error('instagram')
-                    <span>
+                    <span class="validacao">
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
@@ -72,7 +72,7 @@
                 <label for="twitter">Twitter:</label>
                 <input type="text" id="twitter" name="twitter" placeholder="twitter.com/seu_usuario" value="{{ old('twitter') ?? $user->twitter }}">
                 @error('twitter')
-                    <span>
+                    <span class="validacao">
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
@@ -81,7 +81,7 @@
                 <label for="password">Senha:</label>
                 <input type="password" id="password" name="password">
                 @error('password')
-                    <span>
+                    <span class="validacao">
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror

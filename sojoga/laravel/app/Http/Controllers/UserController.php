@@ -80,7 +80,7 @@ class UserController extends Controller
             abort(403);
         }
 
-        return view('sojoga-frontend.editar-usuario', compact('user', 'id'));
+        return view('sojoga-frontend.editar-usuario', compact('user', 'id', 'userLogadoId'));
     }
 
     /**
@@ -93,7 +93,7 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         ($request['whatsapp'] != '') ? $validation = "celular_com_ddd" : $validation = "";
-        ($request['password'] != '') ? $validationPass = "required" : $validationPass = "";
+        ($request['password'] != '') ? $validationPass = "required|min:8" : $validationPass = "";
 
         $this->validate($request, [
             'name' => 'required|string|max:255',

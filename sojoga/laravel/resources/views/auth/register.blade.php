@@ -17,7 +17,7 @@
                 <label for="name">Nome:</label>
                 <input type="text" id="name" name="name" value="{{ old('name') }}" required autofocus>
                 @error('name')
-                    <span>
+                    <span class="validacao">
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
@@ -26,7 +26,7 @@
                 <label for="nickname">Nick:</label>
                 <input type="text" id="nickname" name="nickname" value="{{ old('nickname') }}" required>
                 @error('nickname')
-                    <span>
+                    <span class="validacao">
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
@@ -35,7 +35,7 @@
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" value="{{ old('email') }}" required>
                 @error('email')
-                    <span>
+                    <span class="validacao">
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
@@ -44,7 +44,7 @@
                 <label for="whatsapp">Whatsapp:</label>
                 <input type="text" id="whatsapp" name="whatsapp" placeholder="(00) 00000-0000" value="{{ old('whatsapp') }}">
                 @error('whatsapp')
-                    <span>
+                    <span class="validacao">
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
@@ -53,7 +53,7 @@
                 <label for="facebook">Facebook:</label>
                 <input type="text" id="facebook" name="facebook" placeholder="www.facebook.com/seu_usuario" value="{{ old('facebook') }}">
                 @error('facebook')
-                    <span>
+                    <span class="validacao">
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
@@ -62,7 +62,7 @@
                 <label for="instagram">Instagram:</label>
                 <input type="text" id="instagram" name="instagram" placeholder="www.instagram.com/seu_usuario" value="{{ old('instagram') }}">
                 @error('instagram')
-                    <span>
+                    <span class="validacao">
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
@@ -71,7 +71,7 @@
                 <label for="twitter">Twitter:</label>
                 <input type="text" id="twitter" name="twitter" placeholder="twitter.com/seu_usuario" value="{{ old('twitter') }}">
                 @error('twitter')
-                    <span>
+                    <span class="validacao">
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
@@ -80,7 +80,7 @@
                 <label for="password">Senha:</label>
                 <input type="password" id="password" name="password" required>
                 @error('password')
-                    <span>
+                    <span class="validacao">
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
@@ -89,16 +89,14 @@
                 <label for="confirmPassword">Confirmar Senha:</label>
                 <input type="password" id="confirmPassword" name="password_confirmation" required>
                 @error('password_confirmation')
-                    <span>
+                    <span class="validacao">
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
             </div>
-            <button type="submit">CADASTRAR</button>
+            <div class="butao-registar"><button type="submit">CADASTRAR</button></div>
         </form>
     </div>
-
-    @include('sojoga-frontend._partials.footer')
 
     <script type="text/javascript">
         $("#whatsapp").mask("(00) 00000-0000");

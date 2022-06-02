@@ -36,6 +36,7 @@
                 </select>
             </div>
             <button class="adc-jogo">ADICIONAR JOGO</button>
+            <a href="{{ route('users.show', $userLogadoId) }}" class="voltar">Voltar</a>
         </form>
     </div>
 
