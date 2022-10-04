@@ -5,7 +5,7 @@ Projeto SoJoga
 ...
 
 ## 🛠️ Construído com
-* HTML5  
+* HTML5
 * CSS3
 * JavaScript
 * Laravel-PHP
