@@ -8,7 +8,7 @@ Projeto SoJoga
 * HTML5
 * CSS3
 * JavaScript
-* Laravel-PHP
+* Laravel-PHP 
 * MySQL
 * Docker
 
