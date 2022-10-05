@@ -35,9 +35,9 @@ Alunos do 5º semestre de Análise e Desenvolvimento de Sistemas da Fatec Santan
 ![telas_Prancheta 1](https://user-images.githubusercontent.com/41176753/194106558-4d301a2e-31d8-457e-8488-7dc9c6e0bcd2.jpg)
 
 
-### Listagem
+### Listagem de Grupos
 ![telas_Prancheta 1 cópia 3](https://user-images.githubusercontent.com/41176753/194107029-6224b95a-8212-47db-bb11-070fd82357bc.jpg)
- de Grupos
+
 
 
 ### Listagem de Jogadores
@@ -62,6 +62,34 @@ Alunos do 5º semestre de Análise e Desenvolvimento de Sistemas da Fatec Santan
 
 ### Cadastro de Partidas
 ![telas-08](https://user-images.githubusercontent.com/41176753/194107384-e6304088-e1ba-4c31-acf9-f56fa55675d1.jpg)
+
+
+### Cadastro de Usuário
+![telas-09](https://user-images.githubusercontent.com/41176753/194110376-b6f7e210-2c36-491f-a1cf-cd5a6e5e58e4.jpg)
+
+
+### Perfil de Usuário Comum
+![telas-11](https://user-images.githubusercontent.com/41176753/194110756-c5756201-b921-4e0c-8e86-32ce9dab6c6a.jpg)
+
+
+### Seleção de Jogos
+![telas-12](https://user-images.githubusercontent.com/41176753/194110911-27894de9-f16c-4c60-86ae-1e1e8ea51f9b.jpg)
+
+
+### Perfil de Outro Usuário
+![telas-14](https://user-images.githubusercontent.com/41176753/194110923-fe812588-1309-43c5-8469-d9625fc26241.jpg)
+
+
+### Notificações
+![telas_Prancheta 1 cópia 8](https://user-images.githubusercontent.com/41176753/194110962-4911c0ca-5120-4e36-860d-eb6fdbc9011a.jpg)
+
+
+### Perfil ADM
+![telas-15](https://user-images.githubusercontent.com/41176753/194110944-c561b6c9-17fe-4473-b5f5-bcda44000504.jpg)
+
+
+### Cadastro de Jogos(ADM)
+![telas-16](https://user-images.githubusercontent.com/41176753/194110975-6d10e6a9-1494-426e-a5b1-43fb37c58cf6.jpg)
 
 
 
