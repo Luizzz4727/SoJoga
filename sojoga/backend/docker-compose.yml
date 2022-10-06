@@ -1,0 +1,48 @@
+version: '3.7'
+
+services:       
+  db:
+    container_name: sojoga_db
+    image: mysql
+    restart: always
+    ports: 
+      - "3306:3306"
+    env_file:
+      - ./.docker/config/db.env
+    volumes:
+      - ./db:/var/lib/mysql
+    networks:
+      - netsojoga
+
+  phpmyadmin:
+    depends_on:
+        - db
+    container_name: sojoga_phpmyadmin
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    env_file:
+      - ./.docker/config/phpmyadmin.env
+    ports:
+      - "8001:80"
+    networks:
+      - netsojoga
+
+  api:
+    depends_on:
+      - db
+    container_name: sojoga_api
+    image: 'docker.io/bitnami/laravel:9'
+    ports:
+      - 8000:8000
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USERNAME=root
+      - DB_DATABASE=db_sojoga
+    volumes:
+      - ./laravel/:/app
+    networks:
+      - netsojoga
+
+networks:
+  netsojoga:
