@@ -7,6 +7,12 @@ export default function Register() {
     
   return (
     <View style={styles.container}>
+      <ImageBackground source={require('../../assets/images/fundo-login.png')}
+       style={styles.imgFundo}>
+
+        <View style={styles.register}>
+
+        <Text style={styles.txtregister}>Criar Conta</Text>
 
         <TextInput 
              style={styles.input} 
@@ -49,6 +55,11 @@ export default function Register() {
         <RectButton style={styles.button} > 
         <Text style={styles.buttonText}>CADASTRAR</Text> 
         </RectButton> 
+        </View>
+      
+      </ImageBackground>
+
+
     </View>
   );
 }
@@ -62,8 +73,9 @@ const styles = StyleSheet.create({
   },
   
   input: { 
-    height: 60, 
-    backgroundColor: '#FFF', 
+    width:260,
+    height: 50, 
+    backgroundColor: '#F5F5F5', 
     border: '1px solid black',
     borderRadius: 10, 
     marginBottom: 8, 
@@ -87,5 +99,33 @@ const styles = StyleSheet.create({
   buttonText:{
     fontWeight:'bold',
     color:'#FFF'
+  },
+
+  imgFundo: {
+    flex:1,
+    width: '100%',
+    justifyContent:'center',
+    alignItems:'center',
+    backgroundColor:'#3956FF',
+    borderBottomLeftRadius:50,
+    borderBottomRightRadius:50,
+  },
+
+  register:{
+    width:'80%',
+    height:600,
+    backgroundColor:'#FFF',
+    borderRadius:30,
+    display:'flex',
+    alignItems:'center',
+    justifyContent:'space-around'
+  },
+
+  txtregister:{
+    fontSize:20,
+    fontWeight:'bold',
+    color:'#3956FF'
   }
+  
+
 });
