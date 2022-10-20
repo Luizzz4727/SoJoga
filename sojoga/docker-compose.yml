@@ -45,6 +45,7 @@ services:
       - netsojoga
 
   app:
+    container_name: sojoga_app
     image: app:latest
     build: ./frontend/.docker/
     ports:
