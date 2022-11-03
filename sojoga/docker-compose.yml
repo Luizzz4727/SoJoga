@@ -33,7 +33,8 @@ services:
     container_name: sojoga_api
     image: 'docker.io/bitnami/laravel:9'
     ports:
-      - 8000:8000
+      # - 8000:8000
+      - "8000"
     environment:
       - DB_HOST=db
       - DB_PORT=3306
@@ -62,7 +63,21 @@ services:
    #   - ./frontend:/app/
    # networks:
    #   - netsojoga
-   
+  
+  npm:
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: sojoga_npm
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - ./npm/data:/data
+      - ./npm/letsencrypt:/etc/letsencrypt
+    networks:
+      - netsojoga
+
 networks:
   netsojoga:
 
