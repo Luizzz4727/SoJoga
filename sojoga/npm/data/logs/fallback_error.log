@@ -1,2 +1,6 @@
 2022/11/02 23:01:15 [alert] 308#308: 1024 worker_connections are not enough
 2022/11/02 23:01:15 [error] 309#309: *2024 recv() failed (104: Connection reset by peer) while reading response header from upstream, client: 127.0.0.1, server: localhost-nginx-proxy-manager, request: "GET /favicon.ico HTTP/1.1", upstream: "http://127.0.0.1:80/favicon.ico", host: "sojoga.com.br", referrer: "http://sojoga.com.br/"
+2022/11/03 04:31:53 [error] 285#285: *1 connect() failed (111: Connection refused) while connecting to upstream, client: 179.145.17.192, server: nginxproxymanager, request: "GET /api/ HTTP/1.1", upstream: "http://127.0.0.1:3000/", host: "3.139.252.204:81", referrer: "http://3.139.252.204:81/nginx/proxy"
+2022/11/03 04:32:42 [warn] 303#303: 1024 worker_connections are not enough, reusing connections
+2022/11/03 04:32:42 [alert] 303#303: 1024 worker_connections are not enough
+2022/11/03 04:32:42 [error] 302#302: *1976 recv() failed (104: Connection reset by peer) while reading response header from upstream, client: 127.0.0.1, server: localhost-nginx-proxy-manager, request: "GET /favicon.ico HTTP/1.1", upstream: "http://127.0.0.1:80/favicon.ico", host: "3.139.252.204", referrer: "http://3.139.252.204/"

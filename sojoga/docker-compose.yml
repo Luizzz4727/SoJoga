@@ -33,8 +33,7 @@ services:
     container_name: sojoga_api
     image: 'docker.io/bitnami/laravel:9'
     ports:
-      # - 8000:8000
-      - "8000"
+      - "8000:8000"
     environment:
       - DB_HOST=db
       - DB_PORT=3306
