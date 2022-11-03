@@ -63,19 +63,19 @@ services:
    # networks:
    #   - netsojoga
   
-  npm:
-    image: 'jc21/nginx-proxy-manager:latest'
-    container_name: sojoga_npm
-    restart: unless-stopped
-    ports:
-      - '80:80'
-      - '81:81'
-      - '443:443'
-    volumes:
-      - ./npm/data:/data
-      - ./npm/letsencrypt:/etc/letsencrypt
-    networks:
-      - netsojoga
+  # npm:
+  #   image: 'jc21/nginx-proxy-manager:latest'
+  #   container_name: sojoga_npm
+  #   restart: unless-stopped
+  #   ports:
+  #     - '80:80'
+  #     - '81:81'
+  #     - '443:443'
+  #   volumes:
+  #     - ./npm/data:/data
+  #     - ./npm/letsencrypt:/etc/letsencrypt
+  #   networks:
+  #     - netsojoga
 
 networks:
   netsojoga:
