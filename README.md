@@ -2,7 +2,9 @@
 Projeto SoJoga
 
 ## 🚀 Sobre o projeto
-...
+Aplicativo facilita o encontro de players que gostam dos mesmo jogos,
+gerando um chat para conversarem e permite marcar partidas no sistema
+para que sejam notificados quando chegar o dia e a hora de jogar.
 
 ## 🛠️ Construído com
 * React-Native
