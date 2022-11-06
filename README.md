@@ -17,7 +17,7 @@ Trabalho executado por:
 * **Desenvolvedor** - [Luiz Fernando Mauro Ribeiro da Silva](https://github.com/luizzz4727)
 * **Desenvolvedor** - [Maria Gabriele Rebolhero Grillo](https://github.com/rebolhero)
 
-Alunos do 5º semestre de Análise e Desenvolvimento de Sistemas da Fatec Santana de Parnaíba
+Alunos do 6º semestre de Análise e Desenvolvimento de Sistemas da Fatec Santana de Parnaíba
 
 
 ## 🎁 Obrigado por visualizar!
