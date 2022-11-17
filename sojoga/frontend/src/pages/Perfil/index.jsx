@@ -84,8 +84,22 @@ export default function Perfil() {
             <Text style={styles.buttonText}>Sair</Text> 
         </RectButton> 
         </View>
+        
+      <View style={styles.menu}>
+        <RectButton style={styles.btnMenu}> 
+          <Image style={styles.imgMenu} source={require('../../assets/images/home.png')}/>
+        </RectButton> 
+        <RectButton style={styles.btnMenu}> 
+          <Image style={styles.imgMenu} source={require('../../assets/images/chat.png')}/>
+        </RectButton> 
+        <RectButton style={styles.btnMenu}> 
+          <Image style={styles.imgMenu} source={require('../../assets/images/notificacao.png')}/>
+        </RectButton> 
+        <RectButton style={styles.btnMenu}> 
+          <Image style={styles.imgMenu} source={require('../../assets/images/perfil-ativo.png')}/>
+        </RectButton> 
+      </View>
         </View>
-
         
         
      </ImageBackground>
@@ -277,6 +291,33 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     flexDirection:'row',
     width:'90%'
+  },
+
+  menu:{
+    display:'flex',
+    justifyContent:'space-around',
+    height:69,
+    backgroundColor:'#FFF',
+    width:'100%',
+    flexDirection: 'row',
+    alignItems:'center',
+    borderTopLeftRadius:30,
+    borderTopRightRadius:30,
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 0,
+      height: 18,
+    },
+    shadowOpacity:  0.25,
+    shadowRadius: 20.00,
+    elevation: 24
+  },
+
+  btnMenu:{
+    display:'flex',
+    alignItems:'center',
+    justifyContent:'center'
   }
+
 
 });
