@@ -2,156 +2,111 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Helpers\Helper;
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-
-    public function __construct()
+    /**
+     * Registers a user
+     *
+     * @param RegisterRequest $request
+     * @return JsonResponse
+     */
+    public function register(RegisterRequest $request) : JsonResponse
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
-    }
+        $data = $request->validated();
+        $data['password'] = Hash::make($data['password']);
+        $data['username'] = strstr($data['email'], '@', true);
 
-    protected function respondWithToken($token, $user='')
-    {
-        return response()->json([
-            'to_use' => 'Bearer '.$token,
+        $user = User::create($data);
+        $token = $user->createToken(User::USER_TOKEN);
+
+        return $this->success([
             'user' => $user,
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
-        ]);
+            'token' => $token->plainTextToken,
+        ], 'User has been register successfully.');
     }
 
-    public function login(Request $request){
+    /**
+     * Logins a user
+     *
+     * @param LoginRequest $request
+     * @return void
+     */
+    public function login(LoginRequest $request) : JsonResponse
+    {
+       $isValid = $this->isValidCredential($request);
 
-        $this->validate($request, [
-            'username' => 'required',
-            'password' => 'required',
-        ], [
-            'required' => 'Campo Obrigatório',
-        ]);
+       if(!$isValid['success']){
+            return $this->error($isValid['message'], Response::HTTP_UNPROCESSABLE_ENTITY);
+       }
 
-        $credentials = $request->all();
+       $user = $isValid['user'];
+       $token = $user->createToken(User::USER_TOKEN);
 
-        $userStatus = User::where('username', $credentials['username'])->first()->status ?? '';
+       return $this->success([
+            'user' => $user,
+            'token' => $token->plainTextToken
+       ], 'Login successfully!');
 
-        if (!empty($userStatus) && $userStatus != "A")
-            return Helper::geraResponse(401, 'Usuário não autorizado');
+    }
 
-        if (! $token = auth()->attempt($credentials)) {
-            return Helper::geraResponse(401, 'Usuário ou Senha incorretos');
+    /**
+     * Validates user credential
+     *
+     * @param LoginRequest $request
+     * @return array
+     */
+    private function isValidCredential(LoginRequest $request) : array
+    {
+        $data = $request->validated();
+
+        $user = User::where('email', $data['email'])->first();
+        if($user == null){
+            return [
+                'success'=>false,
+                'message'=>'Invalid Credential'
+            ];
         }
 
-        return $this->respondWithToken($token, auth()->user());
-    }
-
-    public function me()
-    {
-        return response()->json(auth()->user());
-    }
-
-    public function logout()
-    {
-        auth()->logout();
-
-        return response()->json(['message' => 'Successfully logged out']);
-    }
-
-    public function refresh()
-    {
-        return $this->respondWithToken(auth()->refresh());
-    }
-
-    public function register(Request $request)
-    {
-
-        if ($request['acao'] == 'update-user') {
-
-            $validIdUser = "required";
-
-            $idUser = $request['idUser'];
-            $idUserToArray = ",".$idUser;
-            
-            if(!empty($request['password'])) {
-                $validPass = "required|min:8";
-                $validConfirmPass = "required|";
-            } else {
-                $validPass = "";
-                $validConfirmPass = "";
-            }
-
-        } else {
-            
-            $idUserToArray = "";
-            $validIdUser = "";
-            $validPass = "required|min:8";
-            $validConfirmPass = "required|";
-
+        if(Hash::check($data['password'], $user->password)){
+            return [
+                'success'=>true,
+                'user'=>$user
+            ];
         }
 
-        $this->validate($request, [
-            'idUser' => $validIdUser,
-            'acao' => 'required',
-            'username' => 'required|max:100|unique:users,username'.$idUserToArray,
-            'name' => 'required|max:100',
-            'email' => 'required|email|unique:users,email'.$idUserToArray,
-            'password' => $validPass,
-            'confirmPassword' => $validConfirmPass.'same:password'
-        ], [
-            'required' => 'Campo Obrigatório',
-            'unique' => 'Este nome de usuário já está sendo utilizado',
-            'same' => 'As senhas não estão iguais',
-            'max' => 'Campo deve conter no máximo 100 caracteres',
-            'min' => 'Senha deve conter no mínimo 8 caracteres'
-        ]);
-
-
-        $data = $request->except('_token', 'confirmPassword', 'acao', 'idUser');
-
-        if (!empty($data['password'])) {
-            $data['password'] = Hash::make($data['password']);
-        } else {
-            $user = User::find($idUser);
-            $data['password'] = $user->password;
-        }
-
-        if ($request['acao'] == 'create-user') {
-            $user = User::create($data);
-        } else if ($request['acao'] == 'update-user') {
-            $user = User::find($idUser);
-            $user->update($data);
-        }
-
-        return Helper::geraResponse(200, "Database updated successfully", "user", $user);
+        return [
+            'success'=>false,
+            'message'=>'Password is not matched'
+        ];
     }
 
-    public function destroy($id)
+    /**
+     * Logins a user with token
+     *
+     * @return JsonResponse
+     */
+    public function loginWithToken() : JsonResponse
     {
-        $user = User::find($id);
-        $user->delete();
-        return Helper::geraResponse(200, "User deleted successfully");
+        return $this->success(auth()->user(), 'Login successfully!');
     }
 
-    public function lock($acao, $id)
+    /**
+     * Logouts a user
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function logout(Request $request) : JsonResponse
     {
-
-        $user = User::find($id);
-
-        if($acao == "lock"){
-            $user->status = "I";
-            $msg = "locked";
-        }else if($acao == "unlock"){
-            $user->status = "A";
-            $msg = "unlocked";
-        }
-        
-        $user->save();
-        
-        return Helper::geraResponse(200, "User $msg successfully");
+        $request->user()->currentAccessToken()->delete();
+        return $this->success(null, 'Logout successfully!');
     }
-
 }
