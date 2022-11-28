@@ -3,6 +3,7 @@ import{createStackNavigator} from '@react-navigation/stack';
 import Login from './pages/Login'; 
 import Register from './pages/Register'; 
 import Perfil from './pages/Perfil'; 
+import Home from './pages/Home'; 
 import AdicionarJogo from './pages/AdicionarJogo'; 
 
 
@@ -16,7 +17,7 @@ export default function Routes(){
         
         <NavigationContainer> 
 
-            <AppStack.Navigator initialRouteName='AdicionarJogo' screenOptions={{ 
+            <AppStack.Navigator initialRouteName='Home' screenOptions={{ 
 
                 cardStyle:{backgroundColor: '#F0F0F5'},
                 headerShown: false 
@@ -26,6 +27,7 @@ export default function Routes(){
                 <AppStack.Screen name="Login" component={Login}/> 
                 <AppStack.Screen name="Register" component={Register}/> 
                 <AppStack.Screen name="AdicionarJogo" component={AdicionarJogo}/> 
+                <AppStack.Screen name="Home" component={Home}/> 
 
             </AppStack.Navigator> 
 
