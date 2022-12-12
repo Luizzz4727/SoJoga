@@ -1,25 +1,15 @@
-import { StatusBar } from 'expo-status-bar';
 import React, {useState} from 'react'; 
 import { View, Image, ImageBackground, StyleSheet, Text, TextInput, Alert, ScrollView  } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
-import SelectList from 'react-native-dropdown-select-list';
 
 export default function Home() {
 
   const navigation = useNavigation();
 
-  function handleNavigationToRegister() {
-    navigation.navigate('Register');
+  function handleNavigationToPerfil() {
+    navigation.navigate('Perfil');
   }
-
-  const [selected, setSelected] = React.useState("");
-  
-  const data = [
-    {key:'1',value:'Fortnite'},
-    {key:'2',value:'League of Legends'},
-    {key:'3',value:'Valorrant'},
-  ];
 
   return (
     <View style={styles.container}>
@@ -77,7 +67,7 @@ export default function Home() {
             <RectButton style={styles.btnMenu}>
               <Image style={styles.imgMenu} source={require('../../assets/images/notificacao.png')} />
             </RectButton>
-            <RectButton style={styles.btnMenu}>
+            <RectButton style={styles.btnMenu} onPress={handleNavigationToPerfil}>
               <Image style={styles.imgMenu} source={require('../../assets/images/perfil.png')} />
             </RectButton>
           </View>

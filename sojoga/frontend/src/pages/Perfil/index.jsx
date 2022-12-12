@@ -7,9 +7,10 @@ export default function Perfil() {
 
   const navigation = useNavigation(); 
 
-  function handleNavigationToRegister(){ 
-    navigation.navigate('Register'); 
-  } 
+
+  function handleNavigationToHome() {
+    navigation.navigate('Home');
+  }
 
   return (
     <View style={styles.container}>
@@ -86,7 +87,7 @@ export default function Perfil() {
         </View>
         
       <View style={styles.menu}>
-        <RectButton style={styles.btnMenu}> 
+        <RectButton style={styles.btnMenu}  onPress={handleNavigationToHome}> 
           <Image style={styles.imgMenu} source={require('../../assets/images/home.png')}/>
         </RectButton> 
         <RectButton style={styles.btnMenu}> 
@@ -179,7 +180,7 @@ const styles = StyleSheet.create({
     borderTopStartRadius:40,
     display:'flex',
     alignItems:'center',
-    justifyContent: 'flex-start'
+    justifyContent: 'space-between'
   },
   
   rolagemJogos:{

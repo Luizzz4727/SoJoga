@@ -1,82 +1,23 @@
 version: '3.7'
 
 services:       
-  db:
-    container_name: sojoga_db
-    image: mysql
-    restart: always
-    ports: 
-      - "3306:3306"
-    env_file:
-      - ./backend/.docker/config/db.env
-    volumes:
-      - ./backend/db:/var/lib/mysql
-    networks:
-      - netsojoga
-
-  phpmyadmin:
-    depends_on:
-        - db
-    container_name: sojoga_phpmyadmin
-    image: phpmyadmin/phpmyadmin:latest
-    restart: always
-    env_file:
-      - ./backend/.docker/config/phpmyadmin.env
+  app:
+    container_name: sojoga_app
+    image: app:latest
+    build: ./frontend/.docker/
     ports:
-      - "8001:80"
-    networks:
-      - netsojoga
-
-  api:
-    depends_on:
-      - db
-    container_name: sojoga_api
-    image: 'docker.io/bitnami/laravel:9'
-    ports:
-      - "8000:8000"
+      - 19000:19000
+      - 19001:19001
+      - 19002:19002
+      - 19006:19006
     environment:
-      - DB_HOST=db
-      - DB_PORT=3306
-      - DB_USERNAME=root
-      - DB_DATABASE=db_sojoga
-      - DB_PASSWORD=DVuexO1kP4oR
+      - NODE_ENV=dev
+      - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
+      - REACT_NATIVE_PACKAGER_HOSTNAME=192.168.15.4
     volumes:
-      - ./backend/laravel/:/app
+      - ./frontend:/app/
     networks:
       - netsojoga
-
-  # app:
-  #  container_name: sojoga_app
-  #  image: app:latest
-  #  build: ./frontend/.docker/
-  #  ports:
-  #    - 19000:19000
-  #    - 19001:19001
-  #    - 19002:19002
-  #    - 19006:19006
-  #  environment:
-  #    - NODE_ENV=dev
-  #    - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
-  #    - REACT_NATIVE_PACKAGER_HOSTNAME=192.168.15.5
-  #  volumes:
-  #    - ./frontend:/app/
-  #  networks:
-  #    - netsojoga
   
-# npm:
-#     image: 'jc21/nginx-proxy-manager:latest'
-#     container_name: sojoga_npm
-#     restart: unless-stopped
-#     ports:
-#       - '80:80'
-#       - '81:81'
-#       - '443:443'
-#     volumes:
-#       - ./npm/data:/data
-#       - ./npm/letsencrypt:/etc/letsencrypt
-#     networks:
-#       - netsojoga
-
 networks:
   netsojoga:
-
