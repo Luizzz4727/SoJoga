@@ -25,7 +25,8 @@ class SearchController extends Controller
                             ->where('chats.is_private', 0)
                             ->where('chats.name', 'LIKE', "%{$request['search']}%")
                             ->orWhere('games.name', 'LIKE', "%{$request['search']}%")
-                            ->toSql();
+                            ->groupBy('chat_participants.chat_id')
+                            ->get();
 
         $players = User::select(
                                 'users.id', 
@@ -40,7 +41,7 @@ class SearchController extends Controller
                             ->groupBy('users.id')
                             ->get();
         
-        return $this->success($groups);
+        return $this->success(['groups' => $groups, 'players' => $players]);
 
     }
 
