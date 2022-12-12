@@ -41,34 +41,77 @@ class ChatController extends Controller
      * @param StoreChatRequest $request
      * @return void
      */
-    public function store(StoreChatRequest $request) : JsonResponse
+    public function store(StoreChatRequest $request) 
     {
-        $data = $this->prepareStoreData($request);
-        if($data['userId'] == $data['otherUserId']){
-            return $this->error('You can not create a chat with your own');
-        }
 
-        $previousChat = $this->getPreviousChat($data['otherUserId']);
+        $data = $request->validated();
+        $data['created_by'] = auth()->user()->id;
 
-        if($previousChat == null){
+        if ($data['is_private'] == 0) { // grupo
 
-            $chat = Chat::create($data['data']);
+            $chat = Chat::create([
+                'created_by' => $data['created_by'],
+                'game_id' => $data['game_id'],
+                'name' => $data['name'],
+                'is_private' => 0,
+                'path_image' => $data['path_image'] ?? null
+            ]);
+
             $chat->participants()->createMany([
                 [
-                    'user_id' => $data['userId']
-                ],
-                [
-                    'user_id' => $data['otherUserId']
+                    'user_id' => $data['created_by']
                 ]
             ]);
 
             $chat->refresh()->load('lastMessage.user','participants.user');
             return $this->success($chat);
 
+
+
+        } else { // privado
+
+            $otherUserId = (int)$data['user_id'];
+            
+
+            $previousChat = $this->getPreviousChat($otherUserId);
+
+            if($previousChat == null){
+    
+                $chat = Chat::create([
+                    'created_by' => $data['created_by'],
+                    'is_private' => 1,
+                ]);
+
+                $chat->participants()->createMany([
+                    [
+                        'user_id' => $data['created_by']
+                    ],
+                    [
+                        'user_id' => $otherUserId
+                    ]
+                ]);
+    
+                $chat->refresh()->load('lastMessage.user','participants.user');
+                return $this->success($chat);
+    
+            }
+    
+            return $this->success($previousChat->load('lastMessage.user','participants.user'));
+        
         }
 
-        return $this->success($previousChat->load('lastMessage.user','participants.user'));
-    
+
+        // $data = $this->prepareStoreData($request);
+
+        // if()
+
+
+        
+        // if($data['userId'] == $data['otherUserId']){
+        //     return $this->error('You can not create a chat with your own');
+        // }
+
+       
     }
 
     /**
@@ -104,10 +147,12 @@ class ChatController extends Controller
         $otherUserId = (int)$data['user_id'];
         unset($data['user_id']);
         $data['created_by'] = auth()->user()->id;
+        $isPrivate = (int)$data['is_private'];
 
         return [
             'otherUserId' => $otherUserId,
             'userId' => auth()->user()->id,
+            'isPrivate' => $isPrivate,
             'data' => $data
         ];
 

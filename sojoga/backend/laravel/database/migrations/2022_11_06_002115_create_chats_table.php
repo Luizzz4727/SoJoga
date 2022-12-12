@@ -16,8 +16,10 @@ return new class extends Migration
         Schema::create('chats', function (Blueprint $table) {
             $table->id();
             $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('game_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('name')->nullable();
-            $table->boolean('is_private')->default(true);
+            $table->boolean('is_private')->default(false);
+            $table->string('path_image')->nullable();
             $table->timestamps();
         });
     }

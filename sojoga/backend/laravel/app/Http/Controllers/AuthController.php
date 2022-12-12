@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Helpers\Helper;
+use App\Models\Chat;
+use App\Models\Games;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
@@ -64,6 +66,31 @@ class AuthController extends Controller
     public function refresh()
     {
         return $this->respondWithToken(auth()->refresh());
+    }
+
+    public function getUser($id)
+    {
+        $user = User::find($id);
+
+        if(empty($user))
+            return Helper::geraResponse(401, 'Usuário não encontrado');
+
+        $groups = Chat::select('chats.id', 'chats.name', 'chats.path_image')
+                        ->join('chat_participants', 'chats.id', '=', 'chat_participants.chat_id')
+                            ->where('chat_participants.user_id', $id)
+                            ->where('chats.is_private', 0)
+                                ->get();
+
+        $games = Games::select('games.id', 'games.name', 'games.path_image')
+                        ->join('game_users', 'games.id', '=', 'game_users.game_id')
+                            ->where('game_users.user_id', $id)
+                                ->get();
+
+        return response()->json([
+            "user" => $user,
+            "groups" => $groups,
+            "games" => $games
+        ]);
     }
 
     public function register(Request $request)

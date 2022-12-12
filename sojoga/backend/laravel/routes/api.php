@@ -16,12 +16,20 @@ Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
 });
 
-Route::delete('/delete/{id}', [AuthController::class, 'destroy']);
-Route::get('/{acao}/{id}', [AuthController::class, 'lock']);
+Route::middleware('auth:api')->group(function (){
+    Route::get('games/user/', [GameController::class, 'getGames']);
+    Route::post('games/user/', [GameController::class, 'joinGameToUser']);
 
-Route::middleware('auth:sanctum')->group(function (){
     Route::apiResource('chat', ChatController::class)->only(['index', 'store', 'show']);
     Route::apiResource('chat_message', ChatMessageController::class)->only(['index', 'store']);
     Route::apiResource('user', UserController::class)->only(['index']);
-
+    Route::apiResource('games', GameController::class);
+    Route::apiResource('search', SearchController::class);
+    
+    Route::get('/get/user/{id}', [AuthController::class, 'getUser']);
+    Route::delete('/delete/{id}', [AuthController::class, 'destroy']);
+    Route::get('/{acao}/{id}', [AuthController::class, 'lock']);
 });
+
+
+

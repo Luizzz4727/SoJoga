@@ -11,6 +11,14 @@ class Chat extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'created_by',
+        'game_id',
+        'name',
+        'is_private',
+        'path_image'
+    ];
+
     protected $table = "chats";
     protected $guarded = ['id'];
 
