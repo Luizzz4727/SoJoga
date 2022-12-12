@@ -10,7 +10,7 @@ export default function TesteAPI() {
 
   useEffect(() => {
     api
-      .get("/users/romulo27")
+      .get("/")
       .then((response) => setUser(response.data))
       .catch((err) => {
         console.error("ops! ocorreu um erro" + err);
@@ -19,8 +19,7 @@ export default function TesteAPI() {
 
   return (
     <View>
-      <Text>Usuário: {user?.login}</Text>
-      <Text>Biografia: {user?.bio}</Text>
+      <Text>Usuário: {user?.status}</Text>
     </View>
   );
 }

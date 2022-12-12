@@ -2,6 +2,10 @@ import { StatusBar } from 'expo-status-bar';
 import {View, Image, ImageBackground, StyleSheet, Text, TextInput, Alert} from 'react-native'; 
 import {RectButton} from 'react-native-gesture-handler'; 
 import {useNavigation} from '@react-navigation/native'; 
+import React, {useState, useEffect} from 'react';
+import api from "../../services/api";
+import { showMessage, hideMessage } from "react-native-flash-message";
+import FlashMessage from "react-native-flash-message";
 
 export default function Login() {
 
@@ -11,9 +15,40 @@ export default function Login() {
     navigation.navigate('Register'); 
   } 
 
+  function handleNavigationToHome(){ 
+    navigation.navigate('Home'); 
+  } 
+
+  let [loginUsuario, setLoginUsuario] = useState();
+  let [senhaUsuario, setSenhaUsuario] = useState();
+
+
+  async function Logar(){
+    
+  api.post('/auth/login', { 
+    username: loginUsuario, 
+    password: senhaUsuario
+  }) 
+  .then(function (response) {   
+      showMessage({
+        message: "Usuário Autenticado!",
+        type: "Success",
+      });
+      handleNavigationToHome()
+  }) 
+  .catch(error => {
+      showMessage({
+        message: "Alerta: ",
+        description: error.response.data.mensagem,
+        type: "danger",
+      });
+  });
+
+  }
+
   return (
     <View style={styles.container}>
-
+    <FlashMessage position = "bottom"/> 
       <ImageBackground source={require('../../assets/images/fundo-login.png')}
        style={styles.imgFundo}>
         <Text style={styles.tituloLogin}>Sem amigos para jogar?</Text>
@@ -32,9 +67,10 @@ export default function Login() {
 
         <TextInput 
               style={styles.input} 
-              placeholder="E-mail" 
+              placeholder="Usuário" 
               autoCapitalize="characters" 
               autoCorrect={false} 
+              onChangeText={setLoginUsuario}
           /> 
           
           <TextInput 
@@ -42,9 +78,10 @@ export default function Login() {
             placeholder="Senha"            
             autoCorrect={false} 
             secureTextEntry={true} 
-          /> 
+            onChangeText={setSenhaUsuario}
+          />
 
-        <RectButton style={styles.button} > 
+        <RectButton style={styles.button} onPress={Logar}> 
                 <Text style={styles.buttonText}>ENTRAR</Text> 
             </RectButton> 
       </View>

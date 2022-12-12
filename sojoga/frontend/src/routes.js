@@ -29,7 +29,7 @@ export default function Routes(){
         
         <NavigationContainer> 
 
-            <AppStack.Navigator initialRouteName='TesteAPI' screenOptions={{ 
+            <AppStack.Navigator initialRouteName='Login' screenOptions={{ 
 
                 cardStyle:{backgroundColor: '#F0F0F5'},
                 headerShown: false 
