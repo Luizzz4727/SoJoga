@@ -42,23 +42,23 @@ services:
       - ./backend/laravel/:/app
     networks:
       - netsojoga  
-  app:
-    container_name: sojoga_app
-    image: app:latest
-    build: ./frontend/.docker/
-    ports:
-      - 19000:19000
-      - 19001:19001
-      - 19002:19002
-      - 19006:19006
-    environment:
-      - NODE_ENV=dev
-      - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
-      - REACT_NATIVE_PACKAGER_HOSTNAME=192.168.15.4
-    volumes:
-      - ./frontend:/app/
-    networks:
-      - netsojoga
+  # app:
+  #   container_name: sojoga_app
+  #   image: app:latest
+  #   build: ./frontend/.docker/
+  #   ports:
+  #     - 19000:19000
+  #     - 19001:19001
+  #     - 19002:19002
+  #     - 19006:19006
+  #   environment:
+  #     - NODE_ENV=dev
+  #     - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
+  #     - REACT_NATIVE_PACKAGER_HOSTNAME=192.168.15.4
+  #   volumes:
+  #     - ./frontend:/app/
+  #   networks:
+  #     - netsojoga
 
   # npm:
   #    image: 'jc21/nginx-proxy-manager:latest'

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\GetChatRequest;
 use App\Http\Requests\StoreChatRequest;
 use App\Models\Chat;
+use App\Models\ChatParticipant;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -20,19 +21,42 @@ class ChatController extends Controller
     {
         $data = $request->validated();
 
-        $isPrivate = 1;
-        if($request->has('is_private')){
-            $isPrivate = (int)$data['is_private'];
+        if(Chat::find($data['chat_id'])->is_private == 0){ // grupo
+
+            $chats = Chat::select('id', 'name', 'path_image')->find($data['chat_id']);
+
+            $chatParticipants = ChatParticipant::select('users.id', 'users.name', 'users.username', 'users.path_image')
+                                                ->join('users', 'chat_participants.user_id', '=', 'users.id')
+                                                ->where('chat_participants.chat_id', $data['chat_id'])
+                                                ->get();
+            
+
+            if(!empty(ChatParticipant::where('chat_id', $data['chat_id'])->where('user_id', auth()->user()->id)->first()))
+                $chatUserLogged = 1;
+            else
+                $chatUserLogged = 0;
+
+            return $this->success([
+                'chats' => $chats,
+                'participants' => $chatParticipants,
+                'is_participating' => $chatUserLogged
+            ]);
+
         }
 
-        $chats = Chat::where('is_private', $isPrivate)
-            ->hasParticipant(auth()->user()->id)
-            ->whereHas('messages')
-            ->with('lastMessage.user', 'participants.user')
-            ->latest('updated_at')
-            ->get();
+        // $isPrivate = 1;
+        // if($request->has('is_private')){
+        //     $isPrivate = (int)$data['is_private'];
+        // }
 
-        return $this->success($chats);
+        // $chats = Chat::where('is_private', $isPrivate)
+        //     ->hasParticipant(auth()->user()->id)
+        //     ->whereHas('messages')
+        //     ->with('lastMessage.user', 'participants.user')
+        //     ->latest('updated_at')
+        //     ->get();
+
+        // return $this->success($chatParticipants);
     }
 
     /**
@@ -47,21 +71,32 @@ class ChatController extends Controller
         $data = $request->validated();
         $data['created_by'] = auth()->user()->id;
 
+        (!isset($data['chat_id'])) ? $data['chat_id'] = NULL : $data['chat_id'] = $data['chat_id'];
+        (!isset($data['path_image'])) ? $data['path_image'] = NULL : $data['path_image'] = $data['path_image'];
+
         if ($data['is_private'] == 0) { // grupo
 
-            $chat = Chat::create([
+            $chat = Chat::updateOrCreate(
+            [
+                'id' => $data['chat_id']
+            ],
+            [
                 'created_by' => $data['created_by'],
                 'game_id' => $data['game_id'],
                 'name' => $data['name'],
                 'is_private' => 0,
-                'path_image' => $data['path_image'] ?? null
+                'path_image' => $data['path_image']
             ]);
 
-            $chat->participants()->createMany([
-                [
-                    'user_id' => $data['created_by']
-                ]
-            ]);
+
+            if($data['acao'] != 'update-chat'){
+                $chat->participants()->createMany([
+                    [
+                        'user_id' => $data['created_by']
+                    ]
+                ]);
+            }
+            
 
             $chat->refresh()->load('lastMessage.user','participants.user');
             return $this->success($chat);
@@ -71,8 +106,7 @@ class ChatController extends Controller
         } else { // privado
 
             $otherUserId = (int)$data['user_id'];
-            
-
+        
             $previousChat = $this->getPreviousChat($otherUserId);
 
             if($previousChat == null){
@@ -99,19 +133,7 @@ class ChatController extends Controller
             return $this->success($previousChat->load('lastMessage.user','participants.user'));
         
         }
-
-
-        // $data = $this->prepareStoreData($request);
-
-        // if()
-
-
-        
-        // if($data['userId'] == $data['otherUserId']){
-        //     return $this->error('You can not create a chat with your own');
-        // }
-
-       
+      
     }
 
     /**

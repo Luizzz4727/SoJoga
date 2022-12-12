@@ -13,6 +13,11 @@ use Illuminate\Http\Request;
 class GameController extends Controller
 {
 
+    function __construct()
+    {
+        $this->middleware('role:Admin', ['only' => ['store']]);
+    }
+
     /**
      * Get all games
      *

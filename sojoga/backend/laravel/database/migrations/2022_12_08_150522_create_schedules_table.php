@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();
             $table->date('date');
             $table->time('hour');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }

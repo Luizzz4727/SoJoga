@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Chat;
 use Illuminate\Foundation\Http\FormRequest;
 
-class GetChatRequest extends FormRequest
+class GetScheduleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,8 +24,10 @@ class GetChatRequest extends FormRequest
      */
     public function rules()
     {
+        $chatModel = get_class(new Chat());
+
         return [
-            'chat_id' => 'required'
+            'chat_id' => "required|exists:{$chatModel},id",
         ];
     }
 }
