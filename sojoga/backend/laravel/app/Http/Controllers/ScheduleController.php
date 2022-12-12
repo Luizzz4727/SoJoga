@@ -16,9 +16,8 @@ class ScheduleController extends Controller
         $data = $request->validated();
 
         $partidas = Schedules::select('schedules.id', 'schedules.date', 'schedules.hour', 'schedules.description')
-                   ->join('schedule_chats', 'schedules.id', '=', 'schedule_chats.schedule_id')
-                   ->where('schedule_chats.chat_id', $data['chat_id'])
-                   ->get();
+                            ->where('schedules.chat_id', $data['chat_id'])
+                            ->get();
 
         return $this->success($partidas);
 
@@ -42,16 +41,17 @@ class ScheduleController extends Controller
             'created_by' => $data['created_by'],
             'date' => date('Y-m-d', strtotime($date)),
             'hour' => $data['hour'],
-            'description' => $data['description']
+            'description' => $data['description'],
+            'chat_id' => $data['chat_id']
         ]);
 
 
-        if($data['acao'] != 'update-schedule'){
-            ScheduleChats::create([
-                'schedule_id' => $schedule->id,
-                'chat_id' => $data['chat_id']
-            ]);
-        }
+        // if($data['acao'] != 'update-schedule'){
+        //     ScheduleChats::create([
+        //         'schedule_id' => $schedule->id,
+                
+        //     ]);
+        // }
 
         // Notifications::create([
         //     'description' => "Uma partida foi criada no grupo {$}"

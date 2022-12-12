@@ -35,7 +35,8 @@ class StoreScheduleRequest extends FormRequest
             'schedule_id' => "required_if:acao,==,update-schedule|exists:{$scheduleModel},id",
             'chat_id' => "required|exists:{$chatModel},id",
             'date' => 'date_format:d/m/Y|after_or_equal:'.$todayDate,
-            'hour' => 'date_format:H:i|after:'.$todayTime,
+            'hour' => 'date_format:H:i',
+            // 'hour' => 'date_format:H:i|after:'.$todayTime,
             'description' => 'nullable|string',
             'acao' => 'required'
         ];

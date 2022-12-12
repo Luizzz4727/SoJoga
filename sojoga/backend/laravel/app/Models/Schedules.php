@@ -13,7 +13,8 @@ class Schedules extends Model
         'created_by',
         'date',
         'hour',
-        'description'
+        'description',
+        'chat_id'
     ];
 
 }

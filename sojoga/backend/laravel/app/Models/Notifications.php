@@ -10,7 +10,9 @@ class Notifications extends Model
     use HasFactory;
 
     protected $fillable = [
-        'description'
+        'description',
+        'schedule_id',
+        'chat_message_id'
     ];
 
 }
