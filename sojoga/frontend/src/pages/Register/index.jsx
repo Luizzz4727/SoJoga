@@ -59,7 +59,6 @@ export default function Register() {
         <TextInput 
              style={styles.input} 
              placeholder="Nome" 
-             autoCapitalize="characters" 
              autoCorrect={false} 
              onChangeText={setNomeUsuario}
          /> 
@@ -67,7 +66,6 @@ export default function Register() {
         <TextInput 
              style={styles.input} 
              placeholder="Nick" 
-             autoCapitalize="characters" 
              autoCorrect={false} 
              onChangeText={setUsernameUsuario}
          /> 
@@ -75,7 +73,6 @@ export default function Register() {
       <TextInput 
              style={styles.input} 
              placeholder="E-mail" 
-             autoCapitalize="characters" 
              autoCorrect={false} 
              onChangeText={setEmailUsuario}
          /> 

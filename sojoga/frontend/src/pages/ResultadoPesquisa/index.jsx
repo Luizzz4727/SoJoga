@@ -138,6 +138,18 @@ export default function ResultadoPesquisa() {
   const navigation = useNavigation();
   const [index, setIndex] = React.useState(0);
 
+  function handleNavigationToHome() {
+    navigation.navigate('Home');
+  }
+
+  function handleNavigationToChat() {
+    navigation.navigate('Chat');
+  }
+
+  function handleNavigationToHomeNotificacao() {
+    navigation.navigate('Notificacao');
+  }
+
   function handleNavigationToPerfil() {
     navigation.navigate('Perfil');
   }
@@ -187,18 +199,18 @@ export default function ResultadoPesquisa() {
           />
 
           <View style={styles.menu}>
-            <RectButton style={styles.btnMenu}>
-              <Image style={styles.imgMenu} source={require('../../assets/images/home-ativo.png')} />
-            </RectButton>
-            <RectButton style={styles.btnMenu}>
-              <Image style={styles.imgMenu} source={require('../../assets/images/chat.png')} />
-            </RectButton>
-            <RectButton style={styles.btnMenu}>
-              <Image style={styles.imgMenu} source={require('../../assets/images/notificacao.png')} />
-            </RectButton>
-            <RectButton style={styles.btnMenu} onPress={handleNavigationToPerfil}>
-              <Image style={styles.imgMenu} source={require('../../assets/images/perfil.png')} />
-            </RectButton>
+            <RectButton style={styles.btnMenu}  onPress={handleNavigationToHome}> 
+              <Image style={styles.imgMenu} source={require('../../assets/images/home.png')}/>
+            </RectButton> 
+            <RectButton style={styles.btnMenu} onPress={handleNavigationToChat}> 
+              <Image style={styles.imgMenu} source={require('../../assets/images/chat.png')}/>
+            </RectButton> 
+            <RectButton style={styles.btnMenu} onPress={handleNavigationToHomeNotificacao}> 
+              <Image style={styles.imgMenu} source={require('../../assets/images/notificacao.png')}/>
+            </RectButton> 
+            <RectButton style={styles.btnMenu} onPress={handleNavigationToPerfil}> 
+              <Image style={styles.imgMenu} source={require('../../assets/images/perfil-ativo.png')}/>
+            </RectButton> 
           </View>
         </View>
       </ImageBackground>

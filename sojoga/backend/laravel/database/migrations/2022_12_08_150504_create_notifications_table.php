@@ -16,8 +16,9 @@ return new class extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
             $table->string('description');
-            $table->foreignId('schedule_id')->constrained()->cascadeOnDelete()->nullable();
-            $table->foreignId('chat_message_id')->constrained()->cascadeOnDelete()->nullable();
+            $table->foreignId('schedule_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignId('chat_message_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->boolean('is_sent')->nullable();
             $table->timestamps();
         });
     }

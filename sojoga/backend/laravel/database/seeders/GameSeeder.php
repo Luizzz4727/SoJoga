@@ -18,19 +18,19 @@ class GameSeeder extends Seeder
         $games = [
             [
                 "name" => "League of Legends",
-                "path_image" => null
+                "path_image" => '../../assets/images/logo-fortnite.png'
             ],
             [
                 "name" => "Fortnite",
-                "path_image" => null
+                "path_image" => '../../assets/images/logo-fortnite.png'
             ],
             [
                 "name" => "Valorant",
-                "path_image" => null
+                "path_image" => '../../assets/images/logo-fortnite.png'
             ],
             [
                 "name" => "Minecraft",
-                "path_image" => null
+                "path_image" => '../../assets/images/logo-fortnite.png'
             ]
         ];
 

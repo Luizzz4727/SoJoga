@@ -26,6 +26,7 @@ Route::middleware('auth:api')->group(function (){
     Route::apiResource('games', GameController::class);
     Route::apiResource('search', SearchController::class);
     Route::apiResource('schedule', ScheduleController::class);
+    Route::apiResource('notifications', NotificationController::class);
     
     Route::get('/get/user/', [AuthController::class, 'getUser']);
 

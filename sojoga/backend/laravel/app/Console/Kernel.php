@@ -17,8 +17,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('message:daily')
-            ->everyMinute();
-            // ->appendOutputTo('scheduler.log');
+            ->everyFiveMinutes()
+            ->appendOutputTo('scheduler.log');
     }
 
     public function scheduleTimezone()

@@ -17,6 +17,19 @@ export default function Perfil() {
     navigation.navigate('Home');
   }
 
+  function handleNavigationToChat() {
+    navigation.navigate('Chat');
+  }
+
+  function handleNavigationToHomeNotificacao() {
+    navigation.navigate('Notificacao');
+  }
+
+  function handleNavigationToPerfil() {
+    navigation.navigate('Perfil');
+  }
+
+  
   function handleNavigationToLogin() {
     navigation.navigate('Login');
   }
@@ -75,7 +88,7 @@ export default function Perfil() {
           }
         })
         .then(function (response) {
-          Alert.alert("a", JSON.stringify(response.data.user))
+          Alert.alert("a", JSON.stringify(response.data))
           setUser(response.data.user)
           setGrupos(function(lastValue){
             return [...response.data.groups]
@@ -159,20 +172,20 @@ export default function Perfil() {
         </RectButton> 
         </View>
         
-      <View style={styles.menu}>
-        <RectButton style={styles.btnMenu}  onPress={handleNavigationToHome}> 
-          <Image style={styles.imgMenu} source={require('../../assets/images/home.png')}/>
-        </RectButton> 
-        <RectButton style={styles.btnMenu}> 
-          <Image style={styles.imgMenu} source={require('../../assets/images/chat.png')}/>
-        </RectButton> 
-        <RectButton style={styles.btnMenu}> 
-          <Image style={styles.imgMenu} source={require('../../assets/images/notificacao.png')}/>
-        </RectButton> 
-        <RectButton style={styles.btnMenu}> 
-          <Image style={styles.imgMenu} source={require('../../assets/images/perfil-ativo.png')}/>
-        </RectButton> 
-      </View>
+        <View style={styles.menu}>
+          <RectButton style={styles.btnMenu}  onPress={handleNavigationToHome}> 
+            <Image style={styles.imgMenu} source={require('../../assets/images/home.png')}/>
+          </RectButton> 
+          <RectButton style={styles.btnMenu} onPress={handleNavigationToChat}> 
+            <Image style={styles.imgMenu} source={require('../../assets/images/chat.png')}/>
+          </RectButton> 
+          <RectButton style={styles.btnMenu} onPress={handleNavigationToHomeNotificacao}> 
+            <Image style={styles.imgMenu} source={require('../../assets/images/notificacao.png')}/>
+          </RectButton> 
+          <RectButton style={styles.btnMenu} onPress={handleNavigationToPerfil}> 
+            <Image style={styles.imgMenu} source={require('../../assets/images/perfil-ativo.png')}/>
+          </RectButton> 
+        </View>
         </View>
         
         

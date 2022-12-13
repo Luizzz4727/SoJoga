@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\GetScheduleRequest;
 use App\Http\Requests\StoreScheduleRequest;
+use App\Models\Chat;
+use App\Models\ChatParticipant;
 use App\Models\Notifications;
+use App\Models\NotificationUsers;
 use App\Models\ScheduleChats;
 use App\Models\Schedules;
 use Illuminate\Http\Request;
@@ -46,16 +49,21 @@ class ScheduleController extends Controller
         ]);
 
 
-        // if($data['acao'] != 'update-schedule'){
-        //     ScheduleChats::create([
-        //         'schedule_id' => $schedule->id,
-                
-        //     ]);
-        // }
+        $group = Chat::find($data['chat_id']);
+        $participants = ChatParticipant::select('user_id')->where('chat_id', $group->id)->get();
 
-        // Notifications::create([
-        //     'description' => "Uma partida foi criada no grupo {$}"
-        // ]);
+        $notification = Notifications::create([
+            'description' => "Uma partida foi criada no grupo $group->name",
+            'schedule_id' => $schedule->id,
+            'is_sent' => 1
+        ]);
+
+        foreach($participants as $participant){
+            NotificationUsers::create([
+               'notification_id' => $notification->id,
+               'user_id' => $participant->user_id
+            ]);
+        }
 
         return $this->success($schedule);
 

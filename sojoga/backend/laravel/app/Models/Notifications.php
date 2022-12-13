@@ -12,7 +12,8 @@ class Notifications extends Model
     protected $fillable = [
         'description',
         'schedule_id',
-        'chat_message_id'
+        'chat_message_id',
+        'is_sent'
     ];
 
 }
