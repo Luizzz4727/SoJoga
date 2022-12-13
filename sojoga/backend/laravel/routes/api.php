@@ -27,7 +27,7 @@ Route::middleware('auth:api')->group(function (){
     Route::apiResource('search', SearchController::class);
     Route::apiResource('schedule', ScheduleController::class);
     
-    Route::get('/get/user/{id}', [AuthController::class, 'getUser']);
+    Route::get('/get/user/', [AuthController::class, 'getUser']);
 
     Route::group(['middleware' => ['role:Admin']], function () {
         Route::delete('/delete/{id}', [AuthController::class, 'destroy']);

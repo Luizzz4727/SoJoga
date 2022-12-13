@@ -8,6 +8,7 @@ use App\Models\Chat;
 use App\Models\Games;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -68,22 +69,26 @@ class AuthController extends Controller
         return $this->respondWithToken(auth()->refresh());
     }
 
-    public function getUser($id)
+    public function getUser()
     {
-        $user = User::find($id);
+        $user = auth()->user();
 
         if(empty($user))
             return Helper::geraResponse(401, 'Usuário não encontrado');
 
-        $groups = Chat::select('chats.id', 'chats.name', 'chats.path_image')
+        $groups = Chat::select('chats.name', 'chats.path_image', 'chats.created_at', 'users.name as created_by', 'games.name as game', DB::raw('count(chat_participants.chat_id) as participants'))
+                        ->join('games', 'chats.game_id', '=', 'games.id')
+                        ->join('users', 'chats.created_by', '=', 'users.id')
                         ->join('chat_participants', 'chats.id', '=', 'chat_participants.chat_id')
-                            ->where('chat_participants.user_id', $id)
+                            ->where('chat_participants.user_id', $user->id)
                             ->where('chats.is_private', 0)
-                                ->get();
+                            ->groupBy('chat_participants.chat_id')
+                            ->get();
+                                
 
         $games = Games::select('games.id', 'games.name', 'games.path_image')
                         ->join('game_users', 'games.id', '=', 'game_users.game_id')
-                            ->where('game_users.user_id', $id)
+                            ->where('game_users.user_id', $user->id)
                                 ->get();
 
         return response()->json([

@@ -1,7 +1,9 @@
-import React, {useState} from 'react'; 
+import React, {useState, useEffect} from 'react'; 
 import { View, Image, ImageBackground, StyleSheet, Text, TextInput, Alert, ScrollView  } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import api from "../../services/api";
 
 export default function Home() {
 
@@ -10,6 +12,46 @@ export default function Home() {
   function handleNavigationToPerfil() {
     navigation.navigate('Perfil');
   }
+
+  let [jogos, setJogos] = useState([]);
+  let [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+
+    const getData = async () => {
+      try {
+        const token = await AsyncStorage.getItem('@token')
+        api
+        .get("/games", {
+          headers: {
+            'Authorization': `${token}`
+          }
+        })
+        .then(function (response) {
+          // Alert.alert('aaaaa', JSON.stringify(response.data.data))
+          // if (!isLoaded){
+            setJogos(function(lastValue){
+              return [...response.data.data]
+            })
+            // setIsLoaded(true)
+          // }
+          
+        }
+        )
+        .catch((err) => {
+          console.error(err.response)
+          // Alert.alert("ops! ocorreu um erro" + response.data.message);
+        });
+
+      } catch(e) {
+        console.error(e)
+        // error reading value
+      }
+    }
+
+    getData()
+    
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -36,25 +78,17 @@ export default function Home() {
         <Text style={styles.txtTitulo}>Recomendações</Text>
         <View style={styles.bodyRecomendacao}>
           <ScrollView>
-          <RectButton style={styles.boxJogo}>
-            <Image style={styles.imgBoxJogo} source={require('../../assets/images/fortniteIMG.png')} />
-            <Text style={styles.txtBoxJogo}>FORTNITE</Text>
-            </RectButton>
+
+          {jogos.map(function(item){
+            return (
+              <RectButton style={styles.boxJogo} key={`jogos-${item.id}`}>
+                <Image style={styles.imgBoxJogo} source={require('../../assets/images/fortniteIMG.png')} />
+                <Text style={styles.txtBoxJogo}>{item.name}</Text>
+              </RectButton>
+            )
+          })}
             
-          <RectButton style={styles.boxJogo}>
-            <Image style={styles.imgBoxJogo} source={require('../../assets/images/fortniteIMG.png')} />
-            <Text style={styles.txtBoxJogo}>FORTNITE</Text>
-            </RectButton>
-            
-          <RectButton style={styles.boxJogo}>
-            <Image style={styles.imgBoxJogo} source={require('../../assets/images/fortniteIMG.png')} />
-            <Text style={styles.txtBoxJogo}>FORTNITE</Text>
-            </RectButton>
-            
-          <RectButton style={styles.boxJogo}>
-            <Image style={styles.imgBoxJogo} source={require('../../assets/images/fortniteIMG.png')} />
-            <Text style={styles.txtBoxJogo}>FORTNITE</Text>
-            </RectButton>
+          
           </ScrollView>
         </View>
         <View style={styles.menu}>

@@ -6,6 +6,8 @@ import React, {useState, useEffect} from 'react';
 import api from "../../services/api";
 import { showMessage, hideMessage } from "react-native-flash-message";
 import FlashMessage from "react-native-flash-message";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default function Login() {
 
@@ -23,23 +25,48 @@ export default function Login() {
   let [senhaUsuario, setSenhaUsuario] = useState();
 
 
+  // inserirToken = async (value) => {
+  // try {
+  //   // await AsyncStorage.setItem('token', value)
+
+  // } catch(e) {
+  //   // save error
+  // }
+
+  let inserirToken = async (value) => {
+    // Alert.alert('chegou', value)
+    try {
+      await AsyncStorage.setItem('@token', value, function(){
+        console.log("foi")
+      })
+    } catch (e) {
+      console.error(e)
+      // saving error
+    }
+  }
+
+//   console.log('Done.')
+// }
+
   async function Logar(){
     
   api.post('/auth/login', { 
     username: loginUsuario, 
     password: senhaUsuario
   }) 
-  .then(function (response) {   
+  .then(function (response) { 
+      inserirToken(response.data.to_use)
       showMessage({
         message: "Usuário Autenticado!",
         type: "Success",
       });
+
       handleNavigationToHome()
   }) 
   .catch(error => {
       showMessage({
         message: "Alerta: ",
-        description: error.response.data.mensagem,
+        description: error.response.data.message,
         type: "danger",
       });
   });

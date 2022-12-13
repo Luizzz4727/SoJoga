@@ -32,7 +32,8 @@ class GameController extends Controller
 
     public function getGames() : JsonResponse
     {
-        $games = Games::leftJoin('game_users', 'games.id', '=', 'game_users.game_id')
+        $games = Games::select('games.id', 'games.name')
+                        ->leftJoin('game_users', 'games.id', '=', 'game_users.game_id')
                         ->whereNull('game_users.user_id')
                         ->orWhere('game_users.user_id', '!=', auth()->user()->id)
                         ->get();

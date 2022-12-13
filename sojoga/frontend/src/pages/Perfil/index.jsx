@@ -2,6 +2,11 @@ import { StatusBar } from 'expo-status-bar';
 import {View, Image, ImageBackground, StyleSheet, Text, TextInput, Alert, ScrollView} from 'react-native'; 
 import {RectButton} from 'react-native-gesture-handler'; 
 import {useNavigation} from '@react-navigation/native'; 
+import React, {useState, useEffect} from 'react'; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import api from "../../services/api";
+import FlashMessage from "react-native-flash-message";
+import { showMessage, hideMessage } from "react-native-flash-message";
 
 export default function Perfil() {
 
@@ -12,14 +17,98 @@ export default function Perfil() {
     navigation.navigate('Home');
   }
 
+  function handleNavigationToLogin() {
+    navigation.navigate('Login');
+  }
+
+  function handleNavigationToAdicionarJogo() {
+    navigation.navigate('AdicionarJogo');
+  }
+
+  let [user, setUser] = useState();
+  let [jogos, setJogos] = useState([]);
+  let [grupos, setGrupos] = useState([]);
+  let [isLoaded, setIsLoaded] = useState(false);
+
+  const AddJogo = async () => {
+    handleNavigationToAdicionarJogo()
+  }
+
+  const Sair = async () => {
+    try {
+      const token = await AsyncStorage.getItem('@token')
+      api
+      .get("/auth/logout", {
+        headers: {
+          'Authorization': `${token}`
+        }
+      })
+      .then(function (response) {
+        showMessage({
+          message: "Usuário Desconectado!",
+          type: "Success",
+        });
+  
+        handleNavigationToLogin()
+      }
+      )
+      .catch((err) => {
+        console.error(err.response)
+        // Alert.alert("ops! ocorreu um erro" + response.data.message);
+      });
+
+    } catch(e) {
+      console.error(e)
+      // error reading value
+    }
+  }
+  
+  useEffect(() => {
+
+    const getData = async () => {
+      try {
+        const token = await AsyncStorage.getItem('@token')
+        api
+        .get("/get/user", {
+          headers: {
+            'Authorization': `${token}`
+          }
+        })
+        .then(function (response) {
+          Alert.alert("a", JSON.stringify(response.data.user))
+          setUser(response.data.user)
+          setGrupos(function(lastValue){
+            return [...response.data.groups]
+          })
+          setJogos(function(lastValue){
+            return [...response.data.games]
+          })
+        }
+        )
+        .catch((err) => {
+          console.error(err.response)
+          // Alert.alert("ops! ocorreu um erro" + response.data.message);
+        });
+
+      } catch(e) {
+        console.error(e)
+        // error reading value
+      }
+    }
+
+    getData()
+    
+  }, []);
+
   return (
     <View style={styles.container}>
 
+      <FlashMessage position = "bottom"/> 
       <ImageBackground source={require('../../assets/images/fundo-login.png')}
        style={styles.imgFundo}>
         <View style={styles.topoPerfil}>
           <Image style={styles.imgPerfil} source={require('../../assets/images/gwen.png')}/>
-          <Text style={styles.titulo}>Gwen</Text>
+          {/* <Text style={styles.titulo}>{user.username}</Text> */}
           <RectButton style={styles.button} > 
             <Text style={styles.buttonText}>Editar</Text> 
           </RectButton> 
@@ -30,58 +119,42 @@ export default function Perfil() {
         <ScrollView
           horizontal={true}
         >
-          <Image style={styles.imgJogo} source={require('../../assets/images/logo-fortnite.png')}/>
-          <Image style={styles.imgJogo} source={require('../../assets/images/logo-fortnite.png')}/>
-          <Image style={styles.imgJogo} source={require('../../assets/images/logo-fortnite.png')}/>
-          <Image style={styles.imgJogo} source={require('../../assets/images/logo-fortnite.png')}/>
-          <Image style={styles.imgJogo} source={require('../../assets/images/logo-fortnite.png')}/>
-          <Image style={styles.imgJogo} source={require('../../assets/images/logo-fortnite.png')}/>
+          {jogos.map(function(item){
+            return (
+              <Image key={`jogo-${item.id}`} style={styles.imgJogo} source={require('../../assets/images/logo-fortnite.png')}/>
+            )
+          })}
+
         </ScrollView>
         </View>
         <View style={styles.btnjogo}>
-        <RectButton style={styles.buttonJogo} > 
+        <RectButton style={styles.buttonJogo}  onPress={AddJogo}> 
             <Text style={styles.buttonText}>Adicionar Jogo</Text> 
           </RectButton> 
         </View>
         <Text style={styles.txtTitulo}>Grupos</Text>
         <View style={styles.rolagemGrupos}>
         <ScrollView  style={styles.gp}>
-          <View  style={styles.grupos}>
+          
+          {grupos.map(function(item){
+            return (
+              <View  style={styles.grupos} key={`grupo-${item.id}`}>
               <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')}/>
             <View style={styles.txtGrupos}>
-              <Text style={styles.tituloGrupo}>Os Grandes Construtores</Text>
+              <Text style={styles.tituloGrupo}>{item.name}</Text>
               <View style={styles.gpTxt}>
-                <Text style={styles.tituloJogo}>Fortnite</Text>
-                <Text style={styles.tituloJogo}>3/4</Text>
+                <Text style={styles.tituloJogo}>{item.game}</Text>
+                <Text style={styles.tituloJogo}>{item.participants}</Text>
               </View>
             </View>
           </View>
+            )
+          })}
 
-          <View  style={styles.grupos}>
-              <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')}/>
-            <View style={styles.txtGrupos}>
-              <Text style={styles.tituloGrupo}>Os Grandes Construtores</Text>
-              <View style={styles.gpTxt}>
-                <Text style={styles.tituloJogo}>Fortnite</Text>
-                <Text style={styles.tituloJogo}>3/4</Text>
-              </View>
-            </View>
-          </View>
-
-          <View  style={styles.grupos}>
-              <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')}/>
-            <View style={styles.txtGrupos}>
-              <Text style={styles.tituloGrupo}>Os Grandes Construtores</Text>
-              <View style={styles.gpTxt}>
-                <Text style={styles.tituloJogo}>Fortnite</Text>
-                <Text style={styles.tituloJogo}>3/4</Text>
-              </View>
-            </View>
-          </View>
         </ScrollView>
         </View>
         <View style={styles.btnSair}>
-        <RectButton style={styles.buttonSair}> 
+        <RectButton style={styles.buttonSair} onPress={Sair}> 
             <Text style={styles.buttonText}>Sair</Text> 
         </RectButton> 
         </View>
