@@ -14,7 +14,18 @@ const GruposRoute = () => (
       <ScrollView>
         {groups.map((item)=>{
           const {name, path_image, created_at, created_by, game, participants} = item
-          return 
+          return (
+            <RectButton style={styles.boxJogo}>
+              <Text style={styles.txtBoxTopoJogo}>{name}</Text>
+              <Image style={styles.imgBoxJogo} source={require('../../assets/images/fortniteIMG.png')} />
+              <View style={styles.txtBoxJogo}>
+                <Text style={styles.txtBoxFimJogo}>Jogadores: 3/4</Text>
+                <Text style={styles.txtDataBox}>Data de Criação: 22/08/2022</Text>
+                <Text style={styles.txtBoxFimJogo}>Jogo: Fortnite</Text>
+                <Text style={styles.txtBoxFimJogo}>Criador: Gwen</Text>
+              </View>
+            </RectButton>
+          )
         })}
       </ScrollView>
     </View>
@@ -98,14 +109,6 @@ const JogadoresRoute = () => (
     </View>
   </View>
 );
-
-
-"name": "Lolzin",
-"path_image": null,
-"created_at": "2022-12-13T22:07:02.000000Z",
-"created_by": "Luiz",
-"game": "League of Legends",
-"participants": 1
 
 export default function ResultadoPesquisa() {
 
