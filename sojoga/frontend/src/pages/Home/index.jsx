@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'; 
+import React, {useState, useEffect, useCallback} from 'react'; 
 import { View, Image, ImageBackground, StyleSheet, Text, TextInput, Alert, ScrollView  } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
@@ -28,16 +28,22 @@ export default function Home() {
   let [jogos, setJogos] = useState([]);
   let [isLoaded, setIsLoaded] = useState(false);
 
+  const handleGoToSearchGame = useCallback((searchString)=>{
+    navigation.navigate('ResultadoPesquisa', {searchString} );
+
+  },[])
+
   useEffect(() => {
 
     const getData = async () => {
       try {
         const token = await AsyncStorage.getItem('@token')
+
+        if(!token){
+          navigation.navigate('Login')
+        }
         api
         .get("/games", {
-          headers: {
-            'Authorization': `${token}`
-          }
         })
         .then(function (response) {
           // Alert.alert('aaaaa', JSON.stringify(response.data.data))
@@ -93,7 +99,7 @@ export default function Home() {
 
           {jogos.map(function(item){
             return (
-              <RectButton style={styles.boxJogo} key={`jogos-${item.id}`}>
+              <RectButton style={styles.boxJogo} key={`jogos-${item.id}`} onPress={()=>{handleGoToSearchGame(item.name)}}>
                 <Image style={styles.imgBoxJogo} source={require('../../assets/images/fortniteIMG.png')} />
                 <Text style={styles.txtBoxJogo}>{item.name}</Text>
               </RectButton>

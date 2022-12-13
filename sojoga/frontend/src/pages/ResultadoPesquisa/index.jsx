@@ -1,54 +1,21 @@
-import * as React from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, Image, ImageBackground, StyleSheet, Text, TextInput, Alert, ScrollView } from 'react-native';
 import { Dimensions, StatusBar } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import { useRoute } from '@react-navigation/native';
+import api from '../../services/api';
 
 const GruposRoute = () => (
+
   <View style={[styles.scene, { backgroundColor: '#FFF' }]}>
     <View style={styles.bodyRecomendacao}>
       <ScrollView>
-        <RectButton style={styles.boxJogo}>
-          <Text style={styles.txtBoxTopoJogo}>Os Campeões do Fortnite</Text>
-          <Image style={styles.imgBoxJogo} source={require('../../assets/images/fortniteIMG.png')} />
-          <View style={styles.txtBoxJogo}>
-            <Text style={styles.txtBoxFimJogo}>Jogadores: 3/4</Text>
-            <Text style={styles.txtDataBox}>Data de Criação: 22/08/2022</Text>
-            <Text style={styles.txtBoxFimJogo}>Jogo: Fortnite</Text>
-            <Text style={styles.txtBoxFimJogo}>Criador: Gwen</Text>
-          </View>
-        </RectButton>
-        <RectButton style={styles.boxJogo}>
-          <Text style={styles.txtBoxTopoJogo}>Os Campeões do Fortnite</Text>
-          <Image style={styles.imgBoxJogo} source={require('../../assets/images/fortniteIMG.png')} />
-          <View style={styles.txtBoxJogo}>
-            <Text style={styles.txtBoxFimJogo}>Jogadores: 3/4</Text>
-            <Text style={styles.txtDataBox}>Data de Criação: 22/08/2022</Text>
-            <Text style={styles.txtBoxFimJogo}>Jogo: Fortnite</Text>
-            <Text style={styles.txtBoxFimJogo}>Criador: Gwen</Text>
-          </View>
-        </RectButton>
-        <RectButton style={styles.boxJogo}>
-          <Text style={styles.txtBoxTopoJogo}>Os Campeões do Fortnite</Text>
-          <Image style={styles.imgBoxJogo} source={require('../../assets/images/fortniteIMG.png')} />
-          <View style={styles.txtBoxJogo}>
-            <Text style={styles.txtBoxFimJogo}>Jogadores: 3/4</Text>
-            <Text style={styles.txtDataBox}>Data de Criação: 22/08/2022</Text>
-            <Text style={styles.txtBoxFimJogo}>Jogo: Fortnite</Text>
-            <Text style={styles.txtBoxFimJogo}>Criador: Gwen</Text>
-          </View>
-        </RectButton>
-        <RectButton style={styles.boxJogo}>
-          <Text style={styles.txtBoxTopoJogo}>Os Campeões do Fortnite</Text>
-          <Image style={styles.imgBoxJogo} source={require('../../assets/images/fortniteIMG.png')} />
-          <View style={styles.txtBoxJogo}>
-            <Text style={styles.txtBoxFimJogo}>Jogadores: 3/4</Text>
-            <Text style={styles.txtDataBox}>Data de Criação: 22/08/2022</Text>
-            <Text style={styles.txtBoxFimJogo}>Jogo: Fortnite</Text>
-            <Text style={styles.txtBoxFimJogo}>Criador: Gwen</Text>
-          </View>
-        </RectButton>
+        {groups.map((item)=>{
+          const {name, path_image, created_at, created_by, game, participants} = item
+          return 
+        })}
       </ScrollView>
     </View>
   </View>
@@ -133,7 +100,19 @@ const JogadoresRoute = () => (
 );
 
 
+"name": "Lolzin",
+"path_image": null,
+"created_at": "2022-12-13T22:07:02.000000Z",
+"created_by": "Luiz",
+"game": "League of Legends",
+"participants": 1
+
 export default function ResultadoPesquisa() {
+
+  const {groups, setGroups} = useState([])
+
+  const { params } = useRoute();
+  const {searchString} = params;
 
   const navigation = useNavigation();
   const [index, setIndex] = React.useState(0);
@@ -154,13 +133,27 @@ export default function ResultadoPesquisa() {
     navigation.navigate('Perfil');
   }
 
-  state = {
+  const state = {
     index: 0,
     routes: [
       { key: 'Grupos', title: 'Grupos' },
       { key: 'Jogadores', title: 'Jogadores' },
     ],
   };
+
+  useEffect(()=>{
+
+    
+
+    if(searchString){
+      api.get(`/search?search=${searchString}`).then((response)=>{
+        setGroups([...response.data.data])
+      })
+    }else{
+      console.log('Sem nada na Busca')
+    }
+
+  },[params])
 
   return (
     <View style={styles.container}>
@@ -184,10 +177,15 @@ export default function ResultadoPesquisa() {
         </View>
         <View style={styles.bodyPesquisa}>
         <View style={styles.topoTitulo}>
-          <Text style={styles.tituloDados}>Resultados para "Fortnite"</Text>
+          {
+            searchString && (
+              <Text style={styles.tituloDados}>Resultados para "{searchString}"</Text>
+            )
+          }
+         
           </View>
           <TabView
-            navigationState={this.state}
+            navigationState={state}
             renderScene={SceneMap({
               Grupos: GruposRoute,
               Jogadores: JogadoresRoute,

@@ -48,6 +48,18 @@ export default function Login() {
 //   console.log('Done.')
 // }
 
+useEffect(()=>{
+  const validateToken = async ()=>{
+    const token = AsyncStorage.getItem('@key')
+
+    if(token){
+      navigation.navigate('Home'); 
+    }
+  }
+
+  validateToken()
+},[])
+
   async function Logar(){
     
   api.post('/auth/login', { 
