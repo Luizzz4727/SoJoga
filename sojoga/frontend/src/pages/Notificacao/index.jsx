@@ -38,13 +38,13 @@ export default function Notificacao() {
       api
       .get("/notifications")
       .then(function (response) {
-        Alert.alert("a", JSON.stringify(response.data.data))
+       console.log("a", JSON.stringify(response.data.data))
         setNotification([...response.data.data])
 
       }
       )
       .catch((error) => {
-        Alert.alert("a", JSON.stringify(error.response.data.message))
+        // Alert.alert("a", JSON.stringify(error.response.data.message))
         // Alert.alert("ops! ocorreu um erro" + response.data.message);
       });
 
@@ -63,12 +63,6 @@ export default function Notificacao() {
 
   
   
-  useFocusEffect(
-    React.useCallback(() => {
-      getData()
-      i = 0;
-    }, [])
-  );
 
 
 
@@ -85,13 +79,13 @@ export default function Notificacao() {
           <View style={styles.rolagemPartidas}>
           <ScrollView style={styles.gp}>
             
-          {notification.map(function(){
+          {notification.map(function(item){
             i++;
             return (
               <View style={styles.grupos} key={i}>
                 <Image style={styles.imgGrupo} source={require('../../assets/images/icon-notfication.png')} />
                 <View style={styles.txtJogador}>
-                <Text style={styles.tituloJogo}></Text>
+                <Text style={styles.tituloJogo}>{item.description}</Text>
                 </View>
               </View>
             )
@@ -286,7 +280,7 @@ const styles = StyleSheet.create({
 
   tituloJogo:{
     fontSize:14,
-    width:'60%',
+    width:'100%',
     color:'#474747'
   }
 

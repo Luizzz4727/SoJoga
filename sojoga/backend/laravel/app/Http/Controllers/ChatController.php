@@ -58,6 +58,35 @@ class ChatController extends Controller
 
         // return $this->success($chatParticipants);
     }
+    
+    public function getAllChats() : JsonResponse 
+    {
+        // $data = $request->validated();
+
+        // if(Chat::find($data['chat_id'])->is_private == 0){ // grupo
+            $userId = auth()->user()->id;
+
+            $chats = Chat::select('id', 'name', 'path_image', 'is_private')->join('chat_participants', 'chats.id', '=', 'chat_participants.chat_id')->where('chat_participants.user_id', $userId);
+
+            $chatParticipants = ChatParticipant::select('users.id', 'users.name', 'users.username', 'users.path_image')
+                                                ->join('users', 'chat_participants.user_id', '=', 'users.id')
+                                                ->where('chat_participants.chat_id', $chats->id)
+                                                ->get();
+            
+
+            if(!empty(ChatParticipant::where('chat_id', $chats)->where('user_id', auth()->user()->id)->first()))
+                $chatUserLogged = 1;
+            else
+                $chatUserLogged = 0;
+
+            return $this->success([
+                'chats' => $chats,
+                'participants' => $chatParticipants,
+                'is_participating' => $chatUserLogged
+            ]);
+
+        // }
+    }
 
     /**
      * Stores a new chat

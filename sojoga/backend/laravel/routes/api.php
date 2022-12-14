@@ -20,6 +20,7 @@ Route::middleware('auth:api')->group(function (){
     Route::get('games/user/', [GameController::class, 'getGames']);
     Route::post('games/user/', [GameController::class, 'joinGameToUser']);
 
+    Route::get('chats/user', [ChatController::class, 'getAllChats']);
     Route::apiResource('chat', ChatController::class)->only(['index', 'store', 'show']);
     Route::apiResource('chat_message', ChatMessageController::class)->only(['index', 'store']);
     Route::apiResource('user', UserController::class)->only(['index']);
@@ -29,6 +30,7 @@ Route::middleware('auth:api')->group(function (){
     Route::apiResource('notifications', NotificationController::class);
     
     Route::get('/get/user/', [AuthController::class, 'getUser']);
+    Route::get('/get/user/{id}', [AuthController::class, 'getUserById']);
 
     Route::group(['middleware' => ['role:Admin']], function () {
         Route::delete('/delete/{id}', [AuthController::class, 'destroy']);

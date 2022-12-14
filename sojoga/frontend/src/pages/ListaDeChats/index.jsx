@@ -9,7 +9,7 @@ import api from '../../services/api';
 import GruposRoute from './components/GruposRoute';
 
 
-export default function ResultadoPesquisa() {
+export default function ListaChats() {
 
   const [groups, setGroups] = useState([])
 
@@ -86,7 +86,7 @@ export default function ResultadoPesquisa() {
     
 
     if(searchString){
-      api.get(`/search?search=${searchString}`).then((response)=>{
+      api.get(`/chats/user`).then((response)=>{
         console.log('aaaaaa', response.data.data.groups)
         setGroups([...response.data.data.groups])
       })
@@ -99,7 +99,7 @@ export default function ResultadoPesquisa() {
 
   useEffect(()=>{
     if(searchString){
-      api.get(`/search?search=${searchString}`).then((response)=>{
+      api.get(`/chats/user`).then((response)=>{
         setJogadores([...response.data.data.players])
       })
     }else{

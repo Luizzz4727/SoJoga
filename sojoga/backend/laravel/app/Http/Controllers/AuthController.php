@@ -98,6 +98,35 @@ class AuthController extends Controller
         ]);
     }
 
+    public function getUserById($id)
+    {
+        $user = User::find($id);
+
+        if(empty($user))
+            return Helper::geraResponse(401, 'Usuário não encontrado');
+
+        $groups = Chat::select('chats.id', 'chats.name', 'chats.path_image', 'chats.created_at', 'users.name as created_by', 'games.name as game', DB::raw('count(chat_participants.chat_id) as participants'))
+                        ->join('games', 'chats.game_id', '=', 'games.id')
+                        ->join('users', 'chats.created_by', '=', 'users.id')
+                        ->join('chat_participants', 'chats.id', '=', 'chat_participants.chat_id')
+                            ->where('chat_participants.user_id', $user->id)
+                            ->where('chats.is_private', 0)
+                            ->groupBy('chat_participants.chat_id')
+                            ->get();
+                                
+
+        $games = Games::select('games.id', 'games.name', 'games.path_image')
+                        ->join('game_users', 'games.id', '=', 'game_users.game_id')
+                            ->where('game_users.user_id', $user->id)
+                                ->get();
+
+        return response()->json([
+            "user" => $user,
+            "groups" => $groups,
+            "games" => $games
+        ]);
+    }
+
     public function register(Request $request)
     {
 
