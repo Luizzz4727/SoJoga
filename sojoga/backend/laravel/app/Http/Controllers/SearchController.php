@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class SearchController extends Controller
 {
-    
+
     public function index(SearchRequest $request)
     {
 
@@ -18,7 +18,7 @@ class SearchController extends Controller
 
 
         // PAREI AQUI -- trazer dados da pesquisa de grupos
-        $groups = Chat::select('chats.name', 'chats.path_image', 'chats.created_at', 'users.name as created_by', 'games.name as game', DB::raw('count(chat_participants.chat_id) as participants'))
+        $groups = Chat::select('chats.name','chats.id', 'chats.path_image', 'chats.created_at', 'users.name as created_by', 'games.name as game', DB::raw('count(chat_participants.chat_id) as participants'))
                         ->join('games', 'chats.game_id', '=', 'games.id')
                         ->join('users', 'chats.created_by', '=', 'users.id')
                         ->join('chat_participants', 'chats.id', '=', 'chat_participants.chat_id')
@@ -29,8 +29,8 @@ class SearchController extends Controller
                             ->get();
 
         $players = User::select(
-                                'users.id', 
-                                'users.name as username', 
+                                'users.id',
+                                'users.name as username',
                                 DB::raw("GROUP_CONCAT(`games`.`name` SEPARATOR ', ') as games")
                                )
                          ->join('game_users', 'users.id', '=', 'game_users.user_id')
@@ -40,7 +40,7 @@ class SearchController extends Controller
                             ->orWhere('games.name', 'LIKE', "%{$request['search']}%")
                             ->groupBy('users.id')
                             ->get();
-        
+
         return $this->success(['groups' => $groups, 'players' => $players]);
 
     }

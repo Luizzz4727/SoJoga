@@ -6,31 +6,8 @@ import { useNavigation } from '@react-navigation/native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { useRoute } from '@react-navigation/native';
 import api from '../../services/api';
+import GruposRoute from './components/GruposRoute'
 
-const GruposRoute = () => (
-
-  <View style={[styles.scene, { backgroundColor: '#FFF' }]}>
-    <View style={styles.bodyRecomendacao}>
-      <ScrollView>
-        {groups.map((item)=>{
-          const {name, path_image, created_at, created_by, game, participants} = item
-          return (
-            <RectButton style={styles.boxJogo}>
-              <Text style={styles.txtBoxTopoJogo}>{name}</Text>
-              <Image style={styles.imgBoxJogo} source={require('../../assets/images/fortniteIMG.png')} />
-              <View style={styles.txtBoxJogo}>
-                <Text style={styles.txtBoxFimJogo}>Jogadores: 3/4</Text>
-                <Text style={styles.txtDataBox}>Data de Criação: 22/08/2022</Text>
-                <Text style={styles.txtBoxFimJogo}>Jogo: Fortnite</Text>
-                <Text style={styles.txtBoxFimJogo}>Criador: Gwen</Text>
-              </View>
-            </RectButton>
-          )
-        })}
-      </ScrollView>
-    </View>
-  </View>
-);
 const JogadoresRoute = () => (
   <View style={[styles.scene, { backgroundColor: '#FFF' }]}>
     <View style={styles.rolagemGrupos}>
@@ -112,7 +89,7 @@ const JogadoresRoute = () => (
 
 export default function ResultadoPesquisa() {
 
-  const {groups, setGroups} = useState([])
+  const [groups, setGroups] = useState([])
 
   const { params } = useRoute();
   const {searchString} = params;
@@ -150,13 +127,18 @@ export default function ResultadoPesquisa() {
 
     if(searchString){
       api.get(`/search?search=${searchString}`).then((response)=>{
-        setGroups([...response.data.data])
+        console.log('aaaaaa', response.data.data.groups)
+        setGroups([...response.data.data.groups])
       })
     }else{
       console.log('Sem nada na Busca')
     }
 
   },[params])
+
+  useEffect(()=>{
+    console.log('teste',groups)
+  },[groups])
 
   return (
     <View style={styles.container}>
@@ -190,7 +172,7 @@ export default function ResultadoPesquisa() {
           <TabView
             navigationState={state}
             renderScene={SceneMap({
-              Grupos: GruposRoute,
+              Grupos: ()=>(<GruposRoute groups={groups}/>),
               Jogadores: JogadoresRoute,
             })}
             onIndexChange={index => setIndex(index)}
