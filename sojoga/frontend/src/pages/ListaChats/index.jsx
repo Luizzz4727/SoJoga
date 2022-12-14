@@ -44,7 +44,9 @@ export default function ListaChats() {
   const handleNavigateToJogador = (idJogador)=>{
     navigation.navigate('PerfilJogador',{idJogador});
 }
-  
+const handleNavigateToChat = (id)=>{
+  navigation.navigate('Chat',{id});
+}
 
   const [jogadores, setJogadores] = useState([])
   const JogadoresRoute = () => (
@@ -55,12 +57,12 @@ export default function ListaChats() {
         {jogadores.map(function(item, index){
               return (
             <RectButton style={styles.grupos} key={index} onPress={()=>{
-              handleNavigateToJogador(item.id)
+              handleNavigateToChat(item.id)
           }}>
               <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')} />
               <View style={styles.txtJogador}>
                 <Text style={styles.tituloGrupo}>{item.name}</Text>
-                {item.game && (<Text style={styles.tituloJogo}>Jogador de {item.games}</Text>)}
+                {/* {item.game && (<Text style={styles.tituloJogo}>Conversa sobre {item.games}</Text>)} */}
               </View>
             </RectButton>
                 )

@@ -6,6 +6,7 @@ import api from '../../services/api';
 import React, {useState, useEffect} from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import getGameLogoImage from '../../utils/gameLogoImage';
 
 export default function PerfilJogador() {
 
@@ -118,7 +119,7 @@ export default function PerfilJogador() {
         >
           {jogos.map(function(item){
             return (
-              <Image key={`jogo-${item.id}`} style={styles.imgJogo} source={require('../../assets/images/logo-fortnite.png')}/>
+              <Image key={`jogo-${item.id}`} style={styles.imgJogo} source={getGameLogoImage(item.name)}/>
             )
           })}
         </ScrollView>
