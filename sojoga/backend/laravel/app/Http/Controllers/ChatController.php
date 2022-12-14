@@ -8,6 +8,7 @@ use App\Models\Chat;
 use App\Models\ChatParticipant;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ChatController extends Controller
 {
@@ -63,27 +64,19 @@ class ChatController extends Controller
     {
         // $data = $request->validated();
 
-        // if(Chat::find($data['chat_id'])->is_private == 0){ // grupo
             $userId = auth()->user()->id;
 
-            $chats = Chat::select('id', 'name', 'path_image', 'is_private')->join('chat_participants', 'chats.id', '=', 'chat_participants.chat_id')->where('chat_participants.user_id', $userId);
+            $groups = Chat::select('chats.id', 'chats.name', 'chats.path_image', 'chats.created_at', 'users.name as created_by', 'games.name as game', DB::raw('count(chat_participants.chat_id) as participants'))
+                        ->leftJoin('games', 'chats.game_id', '=', 'games.id')
+                        ->join('users', 'chats.created_by', '=', 'users.id')
+                        ->join('chat_participants', 'chats.id', '=', 'chat_participants.chat_id')
+                            ->where('chat_participants.user_id', $userId)
+                            ->groupBy('chat_participants.chat_id')
+                            ->get();
 
-            $chatParticipants = ChatParticipant::select('users.id', 'users.name', 'users.username', 'users.path_image')
-                                                ->join('users', 'chat_participants.user_id', '=', 'users.id')
-                                                ->where('chat_participants.chat_id', $chats->id)
-                                                ->get();
             
-
-            if(!empty(ChatParticipant::where('chat_id', $chats)->where('user_id', auth()->user()->id)->first()))
-                $chatUserLogged = 1;
-            else
-                $chatUserLogged = 0;
-
-            return $this->success([
-                'chats' => $chats,
-                'participants' => $chatParticipants,
-                'is_participating' => $chatUserLogged
-            ]);
+            
+            return $this->success($groups);
 
         // }
     }
@@ -139,10 +132,13 @@ class ChatController extends Controller
             $previousChat = $this->getPreviousChat($otherUserId);
 
             if($previousChat == null){
-    
+                
+                
+
                 $chat = Chat::create([
                     'created_by' => $data['created_by'],
                     'is_private' => 1,
+                    'name' => $data['name']
                 ]);
 
                 $chat->participants()->createMany([

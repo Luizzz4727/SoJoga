@@ -18,14 +18,15 @@ class AuthController extends Controller
         $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
 
-    protected function respondWithToken($token, $user='')
+    protected function respondWithToken($token, $user='', $admin="")
     {
         return response()->json([
             'to_use' => 'Bearer '.$token,
             'user' => $user,
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
+            'expires_in' => auth()->factory()->getTTL() * 60,
+            'admin' => $admin
         ]);
     }
 
@@ -49,7 +50,18 @@ class AuthController extends Controller
             return Helper::geraResponse(401, 'Usuário ou Senha incorretos');
         }
 
-        return $this->respondWithToken($token, auth()->user());
+        $user = auth()->user();
+        $roles = $user->getRoleNames();
+
+        if(count($roles) != 0){
+            $admin = 1;
+        }else{
+            $admin = 0;
+        }
+
+        unset($user['roles']);
+
+        return $this->respondWithToken($token, $user, $admin);
     }
 
     public function me()
