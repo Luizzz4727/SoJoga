@@ -1,20 +1,18 @@
 import { View, Button, Image, ImageBackground, StyleSheet, Text, TextInput, Alert, ScrollView } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
-import * as ImagePicker from 'expo-image-picker';
+import React, { useState, useEffect } from 'react';
 import SelectList from 'react-native-dropdown-select-list';
+import api from "../../services/api";
+import FlashMessage from "react-native-flash-message";
+import { showMessage, hideMessage } from "react-native-flash-message";
 
 
 export default function FormGrupos() {
 
   const [selected, setSelected] = React.useState("");
-
-  const data = [
-    { key: '1', value: 'Fortnite' },
-    { key: '2', value: 'League of Legends' },
-    { key: '3', value: 'Valorrant' },
-  ];
+  const [nomeGrupo, setNomeGrupo] = React.useState("");
+  let [jogos, setJogos] = useState([]);
 
   const navigation = useNavigation();
 
@@ -34,26 +32,69 @@ export default function FormGrupos() {
     navigation.navigate('Perfil');
   }
 
-  const [image, setImage] = useState(null);
+    
+  const getJogos = async () => {
+    try {
 
-  const uri = image?.uri;
+      api
+      .get("/games")
+      .then(function (response) {
+        // Alert.alert('aaaaa', JSON.stringify(response.data.data))
+          setJogos(function(lastValue){
+            return [...response.data.data]
+          })
+      }
+      )
+      .catch((err) => {
+        console.error(err.response)
+      });
 
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    console.log(result.uri);
-    setImage(result.uri);
-
-    if (!result.cancelled) {
-      setImage(result.assets[0].uri);
+    } catch(e) {
+      console.error(e)
     }
-  };
+  }
+
+  useEffect(() => {
+    getJogos()
+    
+  }, []);
+
+  
+  async function CriarGrupo(){
+
+    
+    api.post('/chat', { 
+      game_id: selected,
+      name: nomeGrupo,
+      is_private: 0,
+      acao: 'create-chat'
+    }) 
+    .then(function (response) { 
+      // Alert.alert("criou")
+        showMessage({
+          message: "Jogo Adicionado!",
+          type: "Success",
+        });
+  
+        handleNavigationToHome()
+    }) 
+    .catch(error => {
+      // Alert.alert("nao criou", JSON.stringify(error.response.data))
+        showMessage({
+          message: "Alerta: ",
+          description: error.response.data.message,
+          type: "danger",
+        });
+    });
+    }
+
+
+
+
+  var data = jogos.map(function(item){
+      return {key:item.id, value:item.name};
+  })
+
 
 
   return (
@@ -72,8 +113,8 @@ export default function FormGrupos() {
               <Text style={styles.tituloDados}>Nome do Grupo:</Text>
               <TextInput
                 style={styles.input}
-                autoCapitalize="characters"
                 autoCorrect={false}
+                onChangeText={setNomeGrupo}
               />
             </View>
 
@@ -83,20 +124,13 @@ export default function FormGrupos() {
             </View>
 
             
-
-
-          <View style={styles.selectImage}>
-            <Text style={styles.tituloDados}>Foto do Grupo:</Text>
-            <View style={styles.boxIMG}>
-              <Button title="Escolher Imagem" onPress={pickImage} />
-              {image && <Image source={{ uri: image }} style={{ width: 200, height: 100, margin: 10, }} />}
-
-            </View>
-          </View>
           </View>
           <View style={styles.btnGrupo}>
-            <RectButton style={styles.buttonGrupo} >
+            <RectButton style={styles.buttonGrupo} onPress={CriarGrupo}>
               <Text style={styles.buttonText}>Criar Grupo</Text>
+            </RectButton>
+            <RectButton style={styles.buttonVoltar} onPress={handleNavigationToHome}>
+              <Text style={styles.buttonText}>Voltar</Text>
             </RectButton>
           </View>
 
@@ -291,6 +325,19 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     height: 50
   },
+  
+
+  buttonVoltar: {
+    width: 130,
+    height: 40,
+    backgroundColor: '#474747',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    marginTop: 4,
+    fontSize: 16,
+  },
 
   tituloGrupo: {
     fontSize: 20,
@@ -313,7 +360,7 @@ const styles = StyleSheet.create({
   btnGrupo: {
     display: 'flex',
     justifyContent: 'center',
-    flexDirection: 'row',
+    alignItems:'center',
     width: '90%',
   },
 
