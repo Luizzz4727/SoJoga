@@ -68,6 +68,9 @@ export default function Home() {
     }
 
     getData()
+
+
+    console.log('rodou')
     
   }, []);
 

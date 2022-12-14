@@ -1,16 +1,24 @@
+import { useNavigation } from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import { View, Image, ImageBackground, StyleSheet, Text, TextInput, Alert, ScrollView } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 
 import formatDate from '../../../../utils/formatDate';
 
+import getGameGroupImage from '../../../../utils/gameGroupImage';
+
 
 export default function GruposRoute({groups}) {
+    const navigation = useNavigation();
+
+    const handleNavigateToChat = (id)=>{
+        navigation.navigate('Chat',{id});
+    }
 
     useEffect(()=>{
         console.log('aquiiix',groups)
     },[groups])
-
+//Chat
   return (
     <View style={[styles.scene, { backgroundColor: '#FFF' }]}>
         <View style={styles.bodyRecomendacao}>
@@ -18,9 +26,11 @@ export default function GruposRoute({groups}) {
             {groups.map((item)=>{
             const {name, path_image, created_at, created_by, game, participants,id} = item
             return (
-                <RectButton style={styles.boxJogo} key={`chat-grupo-${id}`}>
+                <RectButton style={styles.boxJogo} key={`chat-grupo-${id}`} onPress={()=>{
+                    handleNavigateToChat(id)
+                }}>
                 <Text style={styles.txtBoxTopoJogo}>{name}</Text>
-                <Image style={styles.imgBoxJogo} source={require('../../../../assets/images/fortniteIMG.png')} />
+                <Image style={styles.imgBoxJogo} source={getGameGroupImage(game)} />
                 <View style={styles.txtBoxJogo}>
                     <Text style={styles.txtBoxFimJogo}>Jogadores: {participants}</Text>
                     <Text style={styles.txtDataBox}>Data de Criação: {formatDate(created_at)}</Text>

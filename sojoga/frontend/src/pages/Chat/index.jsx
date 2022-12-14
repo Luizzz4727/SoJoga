@@ -1,10 +1,295 @@
 import { StatusBar } from 'expo-status-bar';
 import {View, Image, ImageBackground, StyleSheet, Text, TextInput, Alert, ScrollView} from 'react-native'; 
-import {RectButton} from 'react-native-gesture-handler'; 
-import {useNavigation} from '@react-navigation/native'; 
-import React, { useState } from 'react';
+import {FlatList, RectButton} from 'react-native-gesture-handler'; 
+import {useNavigation, useRoute} from '@react-navigation/native'; 
+import React, { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import api from '../../services/api';
+import MyMessage from './components/MyMessage';
+import OtherMessage from './components/OtherMessage';
+
+const data = [
+  {
+      "id": 29,
+      "chat_id": 1,
+      "user_id": 2,
+      "message": "usuario vini",
+      "created_at": "2022-12-14T02:04:34.000000Z",
+      "updated_at": "2022-12-14T02:04:34.000000Z",
+      "user": {
+          "id": 2,
+          "username": "vini",
+          "name": "vini",
+          "email": "vini@email.com",
+          "status": "A",
+          "path_image": null,
+          "created_at": "2022-12-13T21:27:46.000000Z",
+          "updated_at": "2022-12-13T21:27:46.000000Z"
+      }
+  },
+  {
+      "id": 28,
+      "chat_id": 1,
+      "user_id": 1,
+      "message": "eaeee dale",
+      "created_at": "2022-12-14T01:37:31.000000Z",
+      "updated_at": "2022-12-14T01:37:31.000000Z",
+      "user": {
+          "id": 1,
+          "username": "luizao",
+          "name": "Luiz",
+          "email": "luiz@gmail.com",
+          "status": "A",
+          "path_image": null,
+          "created_at": "2022-12-13T21:27:08.000000Z",
+          "updated_at": "2022-12-13T21:27:08.000000Z"
+      }
+  },
+  {
+      "id": 27,
+      "chat_id": 1,
+      "user_id": 1,
+      "message": "eaeee dale",
+      "created_at": "2022-12-14T01:37:30.000000Z",
+      "updated_at": "2022-12-14T01:37:30.000000Z",
+      "user": {
+          "id": 1,
+          "username": "luizao",
+          "name": "Luiz",
+          "email": "luiz@gmail.com",
+          "status": "A",
+          "path_image": null,
+          "created_at": "2022-12-13T21:27:08.000000Z",
+          "updated_at": "2022-12-13T21:27:08.000000Z"
+      }
+  },
+  {
+      "id": 26,
+      "chat_id": 1,
+      "user_id": 1,
+      "message": "eaeee dale",
+      "created_at": "2022-12-14T01:37:28.000000Z",
+      "updated_at": "2022-12-14T01:37:28.000000Z",
+      "user": {
+          "id": 1,
+          "username": "luizao",
+          "name": "Luiz",
+          "email": "luiz@gmail.com",
+          "status": "A",
+          "path_image": null,
+          "created_at": "2022-12-13T21:27:08.000000Z",
+          "updated_at": "2022-12-13T21:27:08.000000Z"
+      }
+  },
+  {
+      "id": 25,
+      "chat_id": 1,
+      "user_id": 1,
+      "message": "eaeee dale",
+      "created_at": "2022-12-14T01:37:26.000000Z",
+      "updated_at": "2022-12-14T01:37:26.000000Z",
+      "user": {
+          "id": 1,
+          "username": "luizao",
+          "name": "Luiz",
+          "email": "luiz@gmail.com",
+          "status": "A",
+          "path_image": null,
+          "created_at": "2022-12-13T21:27:08.000000Z",
+          "updated_at": "2022-12-13T21:27:08.000000Z"
+      }
+  },
+  {
+      "id": 24,
+      "chat_id": 1,
+      "user_id": 1,
+      "message": "eaeee dale",
+      "created_at": "2022-12-14T01:37:25.000000Z",
+      "updated_at": "2022-12-14T01:37:25.000000Z",
+      "user": {
+          "id": 1,
+          "username": "luizao",
+          "name": "Luiz",
+          "email": "luiz@gmail.com",
+          "status": "A",
+          "path_image": null,
+          "created_at": "2022-12-13T21:27:08.000000Z",
+          "updated_at": "2022-12-13T21:27:08.000000Z"
+      }
+  },
+  {
+      "id": 23,
+      "chat_id": 1,
+      "user_id": 1,
+      "message": "eaeee dale",
+      "created_at": "2022-12-14T01:37:24.000000Z",
+      "updated_at": "2022-12-14T01:37:24.000000Z",
+      "user": {
+          "id": 1,
+          "username": "luizao",
+          "name": "Luiz",
+          "email": "luiz@gmail.com",
+          "status": "A",
+          "path_image": null,
+          "created_at": "2022-12-13T21:27:08.000000Z",
+          "updated_at": "2022-12-13T21:27:08.000000Z"
+      }
+  },
+  {
+      "id": 22,
+      "chat_id": 1,
+      "user_id": 1,
+      "message": "eaeee dale",
+      "created_at": "2022-12-14T01:37:22.000000Z",
+      "updated_at": "2022-12-14T01:37:22.000000Z",
+      "user": {
+          "id": 1,
+          "username": "luizao",
+          "name": "Luiz",
+          "email": "luiz@gmail.com",
+          "status": "A",
+          "path_image": null,
+          "created_at": "2022-12-13T21:27:08.000000Z",
+          "updated_at": "2022-12-13T21:27:08.000000Z"
+      }
+  },
+  {
+      "id": 21,
+      "chat_id": 1,
+      "user_id": 1,
+      "message": "eaeee dale",
+      "created_at": "2022-12-14T01:37:21.000000Z",
+      "updated_at": "2022-12-14T01:37:21.000000Z",
+      "user": {
+          "id": 1,
+          "username": "luizao",
+          "name": "Luiz",
+          "email": "luiz@gmail.com",
+          "status": "A",
+          "path_image": null,
+          "created_at": "2022-12-13T21:27:08.000000Z",
+          "updated_at": "2022-12-13T21:27:08.000000Z"
+      }
+  },
+  {
+      "id": 20,
+      "chat_id": 1,
+      "user_id": 1,
+      "message": "eaeee dale",
+      "created_at": "2022-12-14T01:37:20.000000Z",
+      "updated_at": "2022-12-14T01:37:20.000000Z",
+      "user": {
+          "id": 1,
+          "username": "luizao",
+          "name": "Luiz",
+          "email": "luiz@gmail.com",
+          "status": "A",
+          "path_image": null,
+          "created_at": "2022-12-13T21:27:08.000000Z",
+          "updated_at": "2022-12-13T21:27:08.000000Z"
+      }
+  },
+  {
+      "id": 19,
+      "chat_id": 1,
+      "user_id": 1,
+      "message": "eaeee dale",
+      "created_at": "2022-12-14T01:37:19.000000Z",
+      "updated_at": "2022-12-14T01:37:19.000000Z",
+      "user": {
+          "id": 1,
+          "username": "luizao",
+          "name": "Luiz",
+          "email": "luiz@gmail.com",
+          "status": "A",
+          "path_image": null,
+          "created_at": "2022-12-13T21:27:08.000000Z",
+          "updated_at": "2022-12-13T21:27:08.000000Z"
+      }
+  },
+  {
+      "id": 18,
+      "chat_id": 1,
+      "user_id": 1,
+      "message": "eaeee dale",
+      "created_at": "2022-12-14T01:37:17.000000Z",
+      "updated_at": "2022-12-14T01:37:17.000000Z",
+      "user": {
+          "id": 1,
+          "username": "luizao",
+          "name": "Luiz",
+          "email": "luiz@gmail.com",
+          "status": "A",
+          "path_image": null,
+          "created_at": "2022-12-13T21:27:08.000000Z",
+          "updated_at": "2022-12-13T21:27:08.000000Z"
+      }
+  },
+  {
+      "id": 17,
+      "chat_id": 1,
+      "user_id": 1,
+      "message": "eaeee dale",
+      "created_at": "2022-12-14T01:37:16.000000Z",
+      "updated_at": "2022-12-14T01:37:16.000000Z",
+      "user": {
+          "id": 1,
+          "username": "luizao",
+          "name": "Luiz",
+          "email": "luiz@gmail.com",
+          "status": "A",
+          "path_image": null,
+          "created_at": "2022-12-13T21:27:08.000000Z",
+          "updated_at": "2022-12-13T21:27:08.000000Z"
+      }
+  },
+  {
+      "id": 16,
+      "chat_id": 1,
+      "user_id": 1,
+      "message": "eaeee dale",
+      "created_at": "2022-12-14T01:37:14.000000Z",
+      "updated_at": "2022-12-14T01:37:14.000000Z",
+      "user": {
+          "id": 1,
+          "username": "luizao",
+          "name": "Luiz",
+          "email": "luiz@gmail.com",
+          "status": "A",
+          "path_image": null,
+          "created_at": "2022-12-13T21:27:08.000000Z",
+          "updated_at": "2022-12-13T21:27:08.000000Z"
+      }
+  },
+  {
+      "id": 15,
+      "chat_id": 1,
+      "user_id": 1,
+      "message": "eaeee dale",
+      "created_at": "2022-12-14T01:37:12.000000Z",
+      "updated_at": "2022-12-14T01:37:12.000000Z",
+      "user": {
+          "id": 1,
+          "username": "luizao",
+          "name": "Luiz",
+          "email": "luiz@gmail.com",
+          "status": "A",
+          "path_image": null,
+          "created_at": "2022-12-13T21:27:08.000000Z",
+          "updated_at": "2022-12-13T21:27:08.000000Z"
+      }
+  }
+]
+
 
 export default function Chat() {
+
+  const [currentUser, setCurrentUser] = useState({})
+  const [currentPage, setCurrent] = useState(1);
+  const [messages,setMessages] = useState(data)
+  const { params } = useRoute();
+
+  const {id} = params
 
   const navigation = useNavigation(); 
 
@@ -24,6 +309,48 @@ export default function Chat() {
     navigation.navigate('Perfil');
   }
 
+  useEffect(()=>{
+    const getUserData = async ()=>{
+      const user = await AsyncStorage.getItem('@user');
+
+      if(user){
+        setCurrentUser(JSON.parse(user))
+      }
+    }
+
+    const getChatMessages = async ()=>{
+
+      if(id){
+        const response = await api.get(`/chat_message?chat_id=${id}&page=${currentPage}`)
+
+        const {data} = response
+      }
+    }
+
+    getUserData()
+  },[])
+
+  useEffect(()=>{
+console.log('usuarioLogado', currentUser)
+  },[currentUser])
+
+
+  const renderItem = ({item})=>{
+     console.log('item', item.user_id)
+     console.log('currentUser', currentUser.id)
+     console.log('_______')
+    const isCurrentUserMessage = item.user_id === currentUser.id;
+
+    if(isCurrentUserMessage){
+      return <MyMessage message={item.message} time={item.created_at}/>
+    }
+
+    return <OtherMessage message={item.message} time={item.created_at}/>
+
+    
+
+  }
+
   return (
     <View style={styles.container}>
 
@@ -37,56 +364,12 @@ export default function Chat() {
       </View>
 
       <View style={styles.rolagemChat}>
-        <ScrollView  style={styles.chat}
-          ref={ref => {this.scrollView = ref}}
-          onContentSizeChange={() => this.scrollView.scrollToEnd({animated: true})}
-          >
-          <View style={styles.boxPropria}>
-            <View style={styles.boxMsg}>
-              <Text style={styles.msgs}>Olá! Tudo Bem?</Text>
-              <Text style={styles.horaMsg}>13:30</Text>
-            </View>
-          </View>
-          <View style={styles.boxJogador}>
-            <View style={styles.boxMsgJogador}>
-              <Text style={styles.tituloJogador}>DogMan</Text>
-              <Text style={styles.msgs}>Olá! Tudo sim e você?</Text>
-              <Text style={styles.horaMsg}>13:30</Text>
-            </View>
-          </View>
-          <View style={styles.boxPropria}>
-            <View style={styles.boxMsg}>
-              <Text style={styles.msgs}>Eu estou bem também, obrigado!</Text>
-              <Text style={styles.horaMsg}>13:30</Text>
-            </View>
-          </View>
-          <View style={styles.boxPropria}>
-            <View style={styles.boxMsg}>
-              <Text style={styles.msgs}>Você quer jogar hoje a noite no modo contrução?</Text>
-              <Text style={styles.horaMsg}>13:30</Text>
-            </View>
-          </View>
-          <View style={styles.boxJogador}>
-            <View style={styles.boxMsgJogador}>
-              <Text style={styles.tituloJogador}>DogMan</Text>
-              <Text style={styles.msgs}>Eu adoraria jogar hoje!</Text>
-              <Text style={styles.horaMsg}>13:30</Text>
-            </View>
-          </View>
-          <View style={styles.boxPropria}>
-            <View style={styles.boxMsg}>
-              <Text style={styles.msgs}>Poderiamos jogar amanhã as 16 hrs?</Text>
-              <Text style={styles.horaMsg}>13:30</Text>
-            </View>
-          </View>
-          <View style={styles.boxJogador}>
-            <View style={styles.boxMsgJogador}>
-              <Text style={styles.tituloJogador}>DogMan</Text>
-              <Text style={styles.msgs}>Podemos sim!</Text>
-              <Text style={styles.horaMsg}>13:30</Text>
-            </View>
-          </View>
-        </ScrollView>
+      <FlatList
+        data={messages}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        // extraData={selectedId}
+      />
         </View>
 
       <View style={styles.msg}>

@@ -33,12 +33,24 @@ export default function Login() {
   //   // save error
   // }
 
-  let inserirToken = async (value) => {
+  const inserirToken = async (value) => {
     // Alert.alert('chegou', value)
     try {
       await AsyncStorage.setItem('@token', value, function(){
-        console.log("foi")
+        console.log("foi", value)
       })
+    } catch (e) {
+      console.error(e)
+      // saving error
+    }
+  }
+
+  const saveUserLogged = async (value) => {
+    // Alert.alert('chegou', value)
+
+    console.log('asdasd', value)
+    try {
+      await AsyncStorage.setItem('@user', JSON.stringify(value))
     } catch (e) {
       console.error(e)
       // saving error
@@ -50,7 +62,7 @@ export default function Login() {
 
 useEffect(()=>{
   const validateToken = async ()=>{
-    const token = AsyncStorage.getItem('@key')
+    const token = await AsyncStorage.getItem('@token')
 
     if(token){
       navigation.navigate('Home'); 
@@ -68,6 +80,7 @@ useEffect(()=>{
   }) 
   .then(function (response) { 
       inserirToken(response.data.to_use)
+      saveUserLogged(response.data.user)
       showMessage({
         message: "Usuário Autenticado!",
         type: "Success",
