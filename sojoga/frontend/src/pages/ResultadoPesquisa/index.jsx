@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import { View, Image, ImageBackground, StyleSheet, Text, TextInput, Alert, ScrollView } from 'react-native';
 import { Dimensions, StatusBar } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
@@ -6,86 +6,8 @@ import { useNavigation } from '@react-navigation/native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { useRoute } from '@react-navigation/native';
 import api from '../../services/api';
-import GruposRoute from './components/GruposRoute'
+import GruposRoute from './components/GruposRoute';
 
-const JogadoresRoute = () => (
-  <View style={[styles.scene, { backgroundColor: '#FFF' }]}>
-    <View style={styles.rolagemGrupos}>
-      <ScrollView style={styles.gp}>
-        <View style={styles.grupos}>
-          <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')} />
-          <View style={styles.txtJogador}>
-          <Text style={styles.tituloGrupo}>Dogman</Text>
-          <Text style={styles.tituloJogo}>Jogador de Fortnite</Text>
-          </View>
-        </View>
-        <View style={styles.grupos}>
-          <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')} />
-          <View style={styles.txtJogador}>
-          <Text style={styles.tituloGrupo}>Dogman</Text>
-          <Text style={styles.tituloJogo}>Jogador de Fortnite</Text>
-          </View>
-        </View>
-        <View style={styles.grupos}>
-          <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')} />
-          <View style={styles.txtJogador}>
-          <Text style={styles.tituloGrupo}>Dogman</Text>
-          <Text style={styles.tituloJogo}>Jogador de Fortnite</Text>
-          </View>
-        </View>
-        <View style={styles.grupos}>
-          <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')} />
-          <View style={styles.txtJogador}>
-          <Text style={styles.tituloGrupo}>Dogman</Text>
-          <Text style={styles.tituloJogo}>Jogador de Fortnite</Text>
-          </View>
-        </View>
-        <View style={styles.grupos}>
-          <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')} />
-          <View style={styles.txtJogador}>
-          <Text style={styles.tituloGrupo}>Dogman</Text>
-          <Text style={styles.tituloJogo}>Jogador de Fortnite</Text>
-          </View>
-        </View>
-        <View style={styles.grupos}>
-          <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')} />
-          <View style={styles.txtJogador}>
-          <Text style={styles.tituloGrupo}>Dogman</Text>
-          <Text style={styles.tituloJogo}>Jogador de Fortnite</Text>
-          </View>
-        </View>
-        <View style={styles.grupos}>
-          <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')} />
-          <View style={styles.txtJogador}>
-          <Text style={styles.tituloGrupo}>Dogman</Text>
-          <Text style={styles.tituloJogo}>Jogador de Fortnite</Text>
-          </View>
-        </View>
-        <View style={styles.grupos}>
-          <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')} />
-          <View style={styles.txtJogador}>
-          <Text style={styles.tituloGrupo}>Dogman</Text>
-          <Text style={styles.tituloJogo}>Jogador de Fortnite</Text>
-          </View>
-        </View>
-        <View style={styles.grupos}>
-          <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')} />
-          <View style={styles.txtJogador}>
-          <Text style={styles.tituloGrupo}>Dogman</Text>
-          <Text style={styles.tituloJogo}>Jogador de Fortnite</Text>
-          </View>
-        </View>
-        <View style={styles.grupos}>
-          <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')} />
-          <View style={styles.txtJogador}>
-          <Text style={styles.tituloGrupo}>Dogman</Text>
-          <Text style={styles.tituloJogo}>Jogador de Fortnite</Text>
-          </View>
-        </View>
-      </ScrollView>
-    </View>
-  </View>
-);
 
 export default function ResultadoPesquisa() {
 
@@ -93,6 +15,7 @@ export default function ResultadoPesquisa() {
 
   const { params } = useRoute();
   const {searchString} = params;
+  let [txtPesquisa, setTxtPesquisa] = useState([]);
 
   const navigation = useNavigation();
   const [index, setIndex] = React.useState(0);
@@ -112,6 +35,43 @@ export default function ResultadoPesquisa() {
   function handleNavigationToPerfil() {
     navigation.navigate('Perfil');
   }
+
+  
+  const handleGoToSearchGame = useCallback((searchString)=>{
+    navigation.navigate('ResultadoPesquisa', {searchString} );
+
+  },[])
+
+  
+  const handleNavigateToJogador = (idJogador)=>{
+    navigation.navigate('PerfilJogador',{idJogador});
+}
+  
+
+  const [jogadores, setJogadores] = useState([])
+  const JogadoresRoute = () => (
+    <View style={[styles.scene, { backgroundColor: '#FFF' }]}>
+      <View style={styles.rolagemGrupos}>
+        <ScrollView style={styles.gp}>
+          
+        {jogadores.map(function(item){
+              return (
+            <RectButton style={styles.grupos} key={`Jogador-${item.id}`} onPress={()=>{
+              handleNavigateToJogador(id)
+          }}>
+              <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')} />
+              <View style={styles.txtJogador}>
+                <Text style={styles.tituloGrupo}>{item.username}</Text>
+                <Text style={styles.tituloJogo}>Jogador de {item.games}</Text>
+              </View>
+            </RectButton>
+                )
+            })}
+  
+        </ScrollView>
+      </View>
+    </View>
+  );
 
   const state = {
     index: 0,
@@ -136,6 +96,18 @@ export default function ResultadoPesquisa() {
 
   },[params])
 
+
+  useEffect(()=>{
+    if(searchString){
+      api.get(`/search?search=${searchString}`).then((response)=>{
+        setJogadores([...response.data.data.players])
+      })
+    }else{
+      console.log('Sem nada na Busca')
+    }
+
+  },[params])
+
   useEffect(()=>{
     console.log('teste',groups)
   },[groups])
@@ -153,8 +125,9 @@ export default function ResultadoPesquisa() {
                 style={styles.input}
                 autoCapitalize="characters"
                 autoCorrect={false}
+                onChangeText={setTxtPesquisa}
               />
-              <RectButton style={styles.buttonInput} >
+              <RectButton style={styles.buttonInput}  onPress={()=>{handleGoToSearchGame(txtPesquisa)}}>
                 <Image style={styles.imgLupa} source={require('../../assets/images/lupa.png')} />
               </RectButton>
             </View>
@@ -173,7 +146,7 @@ export default function ResultadoPesquisa() {
             navigationState={state}
             renderScene={SceneMap({
               Grupos: ()=>(<GruposRoute groups={groups}/>),
-              Jogadores: JogadoresRoute,
+              Jogadores:  JogadoresRoute,
             })}
             onIndexChange={index => setIndex(index)}
             initialLayout={{ width: Dimensions.get('window').width }}
@@ -186,13 +159,13 @@ export default function ResultadoPesquisa() {
               <Image style={styles.imgMenu} source={require('../../assets/images/home.png')}/>
             </RectButton> 
             <RectButton style={styles.btnMenu} onPress={handleNavigationToChat}> 
-              <Image style={styles.imgMenu} source={require('../../assets/images/chat.png')}/>
+              <Image style={styles.imgMenu} source={require('../../assets/images/chat-ativo.png')}/>
             </RectButton> 
             <RectButton style={styles.btnMenu} onPress={handleNavigationToHomeNotificacao}> 
               <Image style={styles.imgMenu} source={require('../../assets/images/notificacao.png')}/>
             </RectButton> 
             <RectButton style={styles.btnMenu} onPress={handleNavigationToPerfil}> 
-              <Image style={styles.imgMenu} source={require('../../assets/images/perfil-ativo.png')}/>
+              <Image style={styles.imgMenu} source={require('../../assets/images/perfil.png')}/>
             </RectButton> 
           </View>
         </View>

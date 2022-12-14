@@ -38,6 +38,10 @@ export default function Chat() {
     navigation.navigate('Perfil');
   }
 
+  const handleNavigationToDadosGrupo = useCallback(()=>{
+    navigation.navigate('DadosGrupo', {id} );
+  },[])
+
 
   const removeDuplicatedFromArrays = (oldArray,newArray,arrayMethod)=>{
     const parsedArray = [...oldArray];
@@ -165,8 +169,10 @@ export default function Chat() {
         <View style={styles.bodyPartGrupo}>
 
       <View style={styles.topoChat}>
-        <Image style={styles.imgChat} source={require('../../assets/images/gwen.png')}/>
-        <Text style={styles.tituloChat}>Os Grandes Construtores</Text>
+        <Text style={styles.tituloChat}>Os Grandes Construtores </Text>
+        <RectButton style={styles.buttonDados}  onPress={handleNavigationToDadosGrupo}> 
+            <Text style={styles.buttonTextDados}>Dados do Grupo</Text> 
+          </RectButton>
       </View>
 
       <View style={styles.rolagemChat}>
@@ -559,6 +565,16 @@ const styles = StyleSheet.create({
     fontWeight:'bold',
     fontSize:16,
     marginBottom:7
+  },
+
+  buttonDados:{
+    width:80,
+    height: 40, 
+    backgroundColor: '#3956FF', 
+    display:'flex',
+    alignItems:'center',
+    justifyContent:'center',
+    borderRadius: 10
   }
 
 

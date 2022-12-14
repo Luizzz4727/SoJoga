@@ -137,7 +137,7 @@ export default function AdicionarJogo() {
         style={styles.imgFundo}>
         <View style={styles.topoAdcJogos}>
           <Image style={styles.imgAdcJogos} source={require('../../assets/images/gwen.png')} />
-          {/* <Text style={styles.titulo}>{user.username}</Text> */}
+          <Text style={styles.titulo}>{user?.username}</Text>
         </View>
         <View style={styles.bodyAdcJogos}>
         <View style={styles.SelecionarJogo}>

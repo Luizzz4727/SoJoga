@@ -7,7 +7,6 @@ export default function ParticiparGrupo() {
 
   const navigation = useNavigation(); 
 
-
   function handleNavigationToHome() {
     navigation.navigate('Home');
   }
@@ -23,6 +22,8 @@ export default function ParticiparGrupo() {
   function handleNavigationToPerfil() {
     navigation.navigate('Perfil');
   }
+
+  
   
   return (
     <View style={styles.container}>

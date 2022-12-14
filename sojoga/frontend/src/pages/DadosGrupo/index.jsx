@@ -2,11 +2,19 @@ import { StatusBar } from 'expo-status-bar';
 import {View, Image, ImageBackground, StyleSheet, Text, TextInput, Alert, ScrollView} from 'react-native'; 
 import {RectButton} from 'react-native-gesture-handler'; 
 import {useNavigation} from '@react-navigation/native'; 
+import { useRoute } from '@react-navigation/native';
+import React, { useState, useEffect, useCallback } from 'react';
+import api from "../../services/api";
 
 export default function DadosGrupo() {
 
   const navigation = useNavigation(); 
 
+  const { params } = useRoute();
+  const {idChat} = params;
+
+  let [chats, setChats] = useState();
+  let [participantes, setParticipantes] = useState([]);
 
   function handleNavigationToHome() {
     navigation.navigate('Home');
@@ -24,6 +32,40 @@ export default function DadosGrupo() {
     navigation.navigate('Perfil');
   }
 
+  const handleNavigationToPartidas = useCallback(()=>{
+    navigation.navigate('Partidas', {idChat} );
+  },[])
+  
+  const getDados = async () => {
+    try {
+
+      api
+      .get(`/chat?chat_id=${idChat}`)
+      .then(function (response) {
+            setChats(response.data.data.chats)
+
+          setParticipantes(function(lastValue){
+            return [...response.data.data.participants]
+          })
+      }
+      )
+      .catch((err) => {
+        Alert.alert('deu ruim', JSON.stringify(response.data))
+        console.error(err.response)
+      });
+
+    } catch(e) {
+      console.error(e)
+    }
+  }
+
+  useEffect(() => {
+    getDados()
+    
+  }, []);
+
+
+
   return (
     <View style={styles.container}>
 
@@ -33,76 +75,27 @@ export default function DadosGrupo() {
 
         <View style={styles.topoDadosGrupo}>
           <Text style={styles.tituloDados}>Dados do Grupo</Text>
-          <Image style={styles.imgDadosGrupo} source={require('../../assets/images/gwen.png')}/>
-          <Text style={styles.tituloDadosGrupo}  numberOfLines={1}>Os grandes construtores</Text>
+          <Image style={styles.imgDadosGrupo} source={require('../../assets/images/icon-groups.png')}/>
+          <Text style={styles.tituloDadosGrupo}  numberOfLines={1}>{chats?.name}</Text>
         </View>
 
         
         <Text style={styles.txtTitulo}>Participantes</Text>
         <View style={styles.rolagemGrupos}>
         <ScrollView  style={styles.gp}>
+
           
-        <ScrollView  style={styles.gp}>
-          <View  style={styles.grupos}>
-              <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')}/>
-              <Text style={styles.tituloGrupo}>Dogman</Text>
-          </View>
-          <View  style={styles.grupos}>
-              <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')}/>
-              <Text style={styles.tituloGrupo}>Dogman</Text>
-          </View>
-          <View  style={styles.grupos}>
-              <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')}/>
-              <Text style={styles.tituloGrupo}>Dogman</Text>
-          </View>
-          <View  style={styles.grupos}>
-              <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')}/>
-              <Text style={styles.tituloGrupo}>Dogman</Text>
-          </View>
-          <View  style={styles.grupos}>
-              <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')}/>
-              <Text style={styles.tituloGrupo}>Dogman</Text>
-          </View>
-          <View  style={styles.grupos}>
-              <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')}/>
-              <Text style={styles.tituloGrupo}>Dogman</Text>
-          </View>
-          <View  style={styles.grupos}>
-              <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')}/>
-              <Text style={styles.tituloGrupo}>Dogman</Text>
-          </View>
-        </ScrollView>
-          <View  style={styles.grupos}>
-              <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')}/>
-              <Text style={styles.tituloGrupo}>Dogman</Text>
-          </View>
-          <View  style={styles.grupos}>
-              <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')}/>
-              <Text style={styles.tituloGrupo}>Dogman</Text>
-          </View>
-          <View  style={styles.grupos}>
-              <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')}/>
-              <Text style={styles.tituloGrupo}>Dogman</Text>
-          </View>
-          <View  style={styles.grupos}>
-              <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')}/>
-              <Text style={styles.tituloGrupo}>Dogman</Text>
-          </View>
-          <View  style={styles.grupos}>
-              <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')}/>
-              <Text style={styles.tituloGrupo}>Dogman</Text>
-          </View>
-          <View  style={styles.grupos}>
-              <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')}/>
-              <Text style={styles.tituloGrupo}>Dogman</Text>
-          </View>
-          <View  style={styles.grupos}>
-              <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')}/>
-              <Text style={styles.tituloGrupo}>Dogman</Text>
-          </View>
+        {participantes.map(function(item){
+            return (
+              <View  style={styles.grupos} key={`participante-${item.id}`}>
+                  <Image style={styles.imgGrupo} source={require('../../assets/images/icon-user.png')}/>
+                  <Text style={styles.tituloGrupo}>{item.username}</Text>
+              </View>
+            )
+          })}
         </ScrollView>
         <View style={styles.btnGrupo}>
-        <RectButton style={styles.buttonGrupo} > 
+        <RectButton style={styles.buttonGrupo} onPress={handleNavigationToPartidas}> 
             <Text style={styles.buttonText}>Partidas</Text> 
           </RectButton> 
         </View>

@@ -2,11 +2,18 @@ import { StatusBar } from 'expo-status-bar';
 import {View, Image, ImageBackground, StyleSheet, Text, TextInput, Alert, ScrollView} from 'react-native'; 
 import {RectButton} from 'react-native-gesture-handler'; 
 import {useNavigation} from '@react-navigation/native'; 
+import { useRoute } from '@react-navigation/native';
+import React, { useState, useEffect, useCallback } from 'react';
+import api from "../../services/api";
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function Partidas() {
 
   const navigation = useNavigation(); 
+  let [partidas, setPartidas] = useState([]);
 
+  const { params } = useRoute();
+  const {idChat} = params;
 
   function handleNavigationToHome() {
     navigation.navigate('Home');
@@ -24,6 +31,46 @@ export default function Partidas() {
     navigation.navigate('Perfil');
   }
 
+  const handleNavigationToMarcarPartida = useCallback(()=>{
+    navigation.navigate('FormPartidas', {idChat} );
+  },[])
+  
+  const handleNavigationToDadosGrupo = useCallback(()=>{
+    navigation.navigate('DadosGrupo', {idChat} );
+  },[])
+  
+  const getDados = async () => {
+    try {
+      api
+      .get(`/schedule?chat_id=${idChat}`)
+      .then(function (response) {
+        setPartidas(function(lastValue){
+          return [...response.data.data]
+        })
+      }
+      )
+      .catch((err) => {
+        console.error(err.response)
+      });
+
+    } catch(e) {
+      console.error(e)
+    }
+  }
+
+
+  useEffect(() => {
+    getDados()
+  }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getDados()
+    }, [])
+  );
+
+
+
   return (
     <View style={styles.container}>
 
@@ -39,107 +86,35 @@ export default function Partidas() {
         <Text style={styles.txtTitulo}>Partidas Marcadas:</Text>
         <View style={styles.rolagemPartidas}>
         <ScrollView  style={styles.gp}>
-          <View  style={styles.PartidasMarcadas}>
-            <View style={styles.cardPartida}>
-              <View style={styles.data}>
-                <Text style={styles.txtData}>Data:</Text>
-                <Text style={styles.txtData}>30/11/2022</Text>
+          
+        {partidas.map(function(item){
+            return (
+              <View  style={styles.PartidasMarcadas} key={`partida-${item.id}`}>
+                <View style={styles.cardPartida}>
+                  <View style={styles.data}>
+                    <Text style={styles.txtData}>Data:</Text>
+                    <Text style={styles.txtData}>{item?.date}</Text>
+                  </View>
+                  <View style={styles.hora}>
+                    <Text style={styles.txtHora}>Horário:</Text>
+                    <Text style={styles.txtHora}>{item?.hour}</Text>
+                  </View>
+                </View>
+                <View style={styles.descricao}>
+                <Text style={styles.txtDesc}>Descrição</Text>
+                <Text style={styles.txtDesc}>{item?.description}</Text>
+                </View>
               </View>
-              <View style={styles.hora}>
-                <Text style={styles.txtHora}>Horário:</Text>
-                <Text style={styles.txtHora}>22:15</Text>
-              </View>
-            </View>
-            <View style={styles.descricao}>
-            <Text style={styles.txtDesc}>Descrição</Text>
-            <Text style={styles.txtDesc}>Partida no modo construção.</Text>
-            </View>
-          </View>
-          <View  style={styles.PartidasMarcadas}>
-            <View style={styles.cardPartida}>
-              <View style={styles.data}>
-                <Text style={styles.txtData}>Data:</Text>
-                <Text style={styles.txtData}>30/11/2022</Text>
-              </View>
-              <View style={styles.hora}>
-                <Text style={styles.txtHora}>Horário:</Text>
-                <Text style={styles.txtHora}>22:15</Text>
-              </View>
-            </View>
-            <View style={styles.descricao}>
-            <Text style={styles.txtDesc}>Descrição</Text>
-            <Text style={styles.txtDesc}>Partida no modo construção.</Text>
-            </View>
-          </View>
-          <View  style={styles.PartidasMarcadas}>
-            <View style={styles.cardPartida}>
-              <View style={styles.data}>
-                <Text style={styles.txtData}>Data:</Text>
-                <Text style={styles.txtData}>30/11/2022</Text>
-              </View>
-              <View style={styles.hora}>
-                <Text style={styles.txtHora}>Horário:</Text>
-                <Text style={styles.txtHora}>22:15</Text>
-              </View>
-            </View>
-            <View style={styles.descricao}>
-            <Text style={styles.txtDesc}>Descrição</Text>
-            <Text style={styles.txtDesc}>Partida no modo construção.</Text>
-            </View>
-          </View>
-          <View  style={styles.PartidasMarcadas}>
-            <View style={styles.cardPartida}>
-              <View style={styles.data}>
-                <Text style={styles.txtData}>Data:</Text>
-                <Text style={styles.txtData}>30/11/2022</Text>
-              </View>
-              <View style={styles.hora}>
-                <Text style={styles.txtHora}>Horário:</Text>
-                <Text style={styles.txtHora}>22:15</Text>
-              </View>
-            </View>
-            <View style={styles.descricao}>
-            <Text style={styles.txtDesc}>Descrição</Text>
-            <Text style={styles.txtDesc}>Partida no modo construção.</Text>
-            </View>
-          </View>
-          <View  style={styles.PartidasMarcadas}>
-            <View style={styles.cardPartida}>
-              <View style={styles.data}>
-                <Text style={styles.txtData}>Data:</Text>
-                <Text style={styles.txtData}>30/11/2022</Text>
-              </View>
-              <View style={styles.hora}>
-                <Text style={styles.txtHora}>Horário:</Text>
-                <Text style={styles.txtHora}>22:15</Text>
-              </View>
-            </View>
-            <View style={styles.descricao}>
-            <Text style={styles.txtDesc}>Descrição</Text>
-            <Text style={styles.txtDesc}>Partida no modo construção.</Text>
-            </View>
-          </View>
-          <View  style={styles.PartidasMarcadas}>
-            <View style={styles.cardPartida}>
-              <View style={styles.data}>
-                <Text style={styles.txtData}>Data:</Text>
-                <Text style={styles.txtData}>30/11/2022</Text>
-              </View>
-              <View style={styles.hora}>
-                <Text style={styles.txtHora}>Horário:</Text>
-                <Text style={styles.txtHora}>22:15</Text>
-              </View>
-            </View>
-            <View style={styles.descricao}>
-            <Text style={styles.txtDesc}>Descrição</Text>
-            <Text style={styles.txtDesc}>Partida no modo construção.</Text>
-            </View>
-          </View>
+            )
+          })}
         </ScrollView>
         </View>
         <View style={styles.btnGrupo}>
-        <RectButton style={styles.buttonGrupo} > 
+        <RectButton style={styles.buttonGrupo} onPress={handleNavigationToMarcarPartida}> 
             <Text style={styles.buttonText}>Marcar nova partida</Text> 
+          </RectButton> 
+        <RectButton style={styles.buttonVoltar} onPress={handleNavigationToDadosGrupo}> 
+            <Text style={styles.buttonText}>Voltar</Text> 
           </RectButton> 
         </View>
         
@@ -354,10 +329,22 @@ const styles = StyleSheet.create({
     fontSize: 16, 
   },
 
+  buttonVoltar: {
+    width: 130,
+    height: 40,
+    backgroundColor: '#474747',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    marginTop: 4,
+    fontSize: 16,
+  },
+
   btnGrupo:{
     display:'flex',
     justifyContent:'center',
-    flexDirection:'row',
+    alignItems:'center',
     width:'90%',
   },
 

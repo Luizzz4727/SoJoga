@@ -2,11 +2,14 @@ import { StatusBar } from 'expo-status-bar';
 import {View, Image, ImageBackground, StyleSheet, Text, TextInput, Alert, ScrollView} from 'react-native'; 
 import {RectButton} from 'react-native-gesture-handler'; 
 import {useNavigation} from '@react-navigation/native'; 
-import React, {useState, useEffect} from 'react'; 
+import React, {useState, useEffect, useCallback} from 'react'; 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from "../../services/api";
 import FlashMessage from "react-native-flash-message";
 import { showMessage, hideMessage } from "react-native-flash-message";
+import { useFocusEffect } from '@react-navigation/native';
+
+
 
 export default function Perfil() {
 
@@ -29,6 +32,10 @@ export default function Perfil() {
     navigation.navigate('Perfil');
   }
 
+  function handleNavigationToEditarPerfil() {
+    navigation.navigate('EditarPerfil');
+  }
+
   
   function handleNavigationToLogin() {
     navigation.navigate('Login');
@@ -37,6 +44,16 @@ export default function Perfil() {
   function handleNavigationToAdicionarJogo() {
     navigation.navigate('AdicionarJogo');
   }
+
+  function handleNavigationToCriarGrupo() {
+    navigation.navigate('FormGrupos');
+  }
+
+  const handleNavigationToDadosGrupo = useCallback(()=>{
+    navigation.navigate('DadosGrupo', {idChat} );
+  },[])
+
+  let idChat = 1;
 
   let [user, setUser] = useState();
   let [jogos, setJogos] = useState([]);
@@ -47,9 +64,34 @@ export default function Perfil() {
     handleNavigationToAdicionarJogo()
   }
 
+  const getData = async () => {
+    try {
+      api
+      .get("/get/user")
+      .then(function (response) {
+        // Alert.alert("a", JSON.stringify(response.data))
+        setUser(response.data.user)
+        setGrupos(function(lastValue){
+          return [...response.data.groups]
+        })
+        setJogos(function(lastValue){
+          return [...response.data.games]
+        })
+      }
+      )
+      .catch((err) => {
+        console.error(err.response)
+        // Alert.alert("ops! ocorreu um erro" + response.data.message);
+      });
+
+    } catch(e) {
+      console.error(e)
+      // error reading value
+    }
+  }
+
   const Sair = async () => {
     try {
-      const token = await AsyncStorage.getItem('@token')
       api
       .get("/auth/logout", {
         headers: {
@@ -77,41 +119,17 @@ export default function Perfil() {
   }
   
   useEffect(() => {
-
-    const getData = async () => {
-      try {
-        const token = await AsyncStorage.getItem('@token')
-        api
-        .get("/get/user", {
-          headers: {
-            'Authorization': `${token}`
-          }
-        })
-        .then(function (response) {
-          Alert.alert("a", JSON.stringify(response.data))
-          setUser(response.data.user)
-          setGrupos(function(lastValue){
-            return [...response.data.groups]
-          })
-          setJogos(function(lastValue){
-            return [...response.data.games]
-          })
-        }
-        )
-        .catch((err) => {
-          console.error(err.response)
-          // Alert.alert("ops! ocorreu um erro" + response.data.message);
-        });
-
-      } catch(e) {
-        console.error(e)
-        // error reading value
-      }
-    }
-
     getData()
-    
   }, []);
+
+  
+  
+  useFocusEffect(
+    React.useCallback(() => {
+      getData()
+    }, [])
+  );
+
 
   return (
     <View style={styles.container}>
@@ -121,9 +139,9 @@ export default function Perfil() {
        style={styles.imgFundo}>
         <View style={styles.topoPerfil}>
           <Image style={styles.imgPerfil} source={require('../../assets/images/gwen.png')}/>
-          {/* <Text style={styles.titulo}>{user.username}</Text> */}
+          <Text style={styles.titulo}>{user?.username}</Text>
           <RectButton style={styles.button} > 
-            <Text style={styles.buttonText}>Editar</Text> 
+            <Text style={styles.buttonText} onPress={handleNavigationToEditarPerfil}>Editar</Text> 
           </RectButton> 
         </View>
         <View style={styles.bodyPerfil}>
@@ -144,6 +162,9 @@ export default function Perfil() {
         <RectButton style={styles.buttonJogo}  onPress={AddJogo}> 
             <Text style={styles.buttonText}>Adicionar Jogo</Text> 
           </RectButton> 
+          <RectButton style={styles.buttonJogo}  onPress={handleNavigationToDadosGrupo}> 
+            <Text style={styles.buttonText}>Criar Grupo</Text> 
+          </RectButton> 
         </View>
         <Text style={styles.txtTitulo}>Grupos</Text>
         <View style={styles.rolagemGrupos}>
@@ -153,7 +174,7 @@ export default function Perfil() {
             return (
               <View  style={styles.grupos} key={`grupo-${item.id}`}>
               <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')}/>
-            <View style={styles.txtGrupos}>
+              <View style={styles.txtGrupos}>
               <Text style={styles.tituloGrupo}>{item.name}</Text>
               <View style={styles.gpTxt}>
                 <Text style={styles.tituloJogo}>{item.game}</Text>

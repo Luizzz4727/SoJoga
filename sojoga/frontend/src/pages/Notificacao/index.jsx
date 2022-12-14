@@ -1,21 +1,18 @@
 import { View, Button, Image, ImageBackground, StyleSheet, Text, TextInput, Alert, ScrollView } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
-import * as ImagePicker from 'expo-image-picker';
-import SelectList from 'react-native-dropdown-select-list';
+import React, { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import api from "../../services/api";
+import { useFocusEffect } from '@react-navigation/native';
+
 
 
 export default function Notificacao() {
 
-  const [selected, setSelected] = React.useState("");
-
-  const data = [
-    { key: '1', value: 'Fortnite' },
-    { key: '2', value: 'League of Legends' },
-    { key: '3', value: 'Valorrant' },
-  ];
-
+  const [selected, setSelected] = useState("");
+  const [notification, setNotification] = useState([]);
+  let i = 0;
   const navigation = useNavigation();
 
   function handleNavigationToHome() {
@@ -34,6 +31,46 @@ export default function Notificacao() {
     navigation.navigate('Perfil');
   }
 
+  
+  const getData = async () => {
+    try {
+      const token = await AsyncStorage.getItem('@token')
+      api
+      .get("/notifications")
+      .then(function (response) {
+        Alert.alert("a", JSON.stringify(response.data.data))
+        setNotification([...response.data.data])
+
+      }
+      )
+      .catch((error) => {
+        Alert.alert("a", JSON.stringify(error.response.data.message))
+        // Alert.alert("ops! ocorreu um erro" + response.data.message);
+      });
+
+    } catch(e) {
+      console.error(e)
+      // error reading value
+    }
+  }
+
+
+
+  useEffect(() => {
+    getData()
+    i = 0;
+  }, []);
+
+  
+  
+  useFocusEffect(
+    React.useCallback(() => {
+      getData()
+      i = 0;
+    }, [])
+  );
+
+
 
   return (
     <View style={styles.container}>
@@ -47,48 +84,18 @@ export default function Notificacao() {
           </View>
           <View style={styles.rolagemPartidas}>
           <ScrollView style={styles.gp}>
-            <View style={styles.grupos}>
-              <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')} />
-              <View style={styles.txtJogador}>
-              <Text style={styles.tituloJogo}>A partida do grupo de “Os Grandes Construtores” começará em 30 minutos. </Text>
+            
+          {notification.map(function(){
+            i++;
+            return (
+              <View style={styles.grupos} key={i}>
+                <Image style={styles.imgGrupo} source={require('../../assets/images/icon-notfication.png')} />
+                <View style={styles.txtJogador}>
+                <Text style={styles.tituloJogo}></Text>
+                </View>
               </View>
-            </View>
-            <View style={styles.grupos}>
-              <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')} />
-              <View style={styles.txtJogador}>
-              <Text style={styles.tituloJogo}>A partida do grupo de “Os Grandes Construtores” começará em 30 minutos. </Text>
-              </View>
-            </View>
-            <View style={styles.grupos}>
-              <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')} />
-              <View style={styles.txtJogador}>
-              <Text style={styles.tituloJogo}>A partida do grupo de “Os Grandes Construtores” começará em 30 minutos. </Text>
-              </View>
-            </View>
-            <View style={styles.grupos}>
-              <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')} />
-              <View style={styles.txtJogador}>
-              <Text style={styles.tituloJogo}>A partida do grupo de “Os Grandes Construtores” começará em 30 minutos. </Text>
-              </View>
-            </View>
-            <View style={styles.grupos}>
-              <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')} />
-              <View style={styles.txtJogador}>
-              <Text style={styles.tituloJogo}>A partida do grupo de “Os Grandes Construtores” começará em 30 minutos. </Text>
-              </View>
-            </View>
-            <View style={styles.grupos}>
-              <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')} />
-              <View style={styles.txtJogador}>
-              <Text style={styles.tituloJogo}>A partida do grupo de “Os Grandes Construtores” começará em 30 minutos. </Text>
-              </View>
-            </View>
-            <View style={styles.grupos}>
-              <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')} />
-              <View style={styles.txtJogador}>
-              <Text style={styles.tituloJogo}>A partida do grupo de “Os Grandes Construtores” começará em 30 minutos. </Text>
-              </View>
-            </View>
+            )
+          })}
             </ScrollView>
           </View>
 
@@ -100,10 +107,10 @@ export default function Notificacao() {
               <Image style={styles.imgMenu} source={require('../../assets/images/chat.png')}/>
             </RectButton> 
             <RectButton style={styles.btnMenu} onPress={handleNavigationToHomeNotificacao}> 
-              <Image style={styles.imgMenu} source={require('../../assets/images/notificacao.png')}/>
+              <Image style={styles.imgMenu} source={require('../../assets/images/notificacao-ativo.png')}/>
             </RectButton> 
             <RectButton style={styles.btnMenu} onPress={handleNavigationToPerfil}> 
-              <Image style={styles.imgMenu} source={require('../../assets/images/perfil-ativo.png')}/>
+              <Image style={styles.imgMenu} source={require('../../assets/images/perfil.png')}/>
             </RectButton> 
           </View>
         </View>

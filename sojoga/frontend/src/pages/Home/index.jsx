@@ -4,6 +4,7 @@ import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from "../../services/api";
+import getGameGroupImage from '../../utils/gameGroupImage';
 
 export default function Home() {
 
@@ -26,6 +27,7 @@ export default function Home() {
   }
 
   let [jogos, setJogos] = useState([]);
+  let [txtPesquisa, setTxtPesquisa] = useState([]);
   let [isLoaded, setIsLoaded] = useState(false);
 
   const handleGoToSearchGame = useCallback((searchString)=>{
@@ -89,8 +91,9 @@ export default function Home() {
               style={styles.input} 
               autoCapitalize="characters" 
               autoCorrect={false} 
+              onChangeText={setTxtPesquisa}
           /> 
-          <RectButton style={styles.buttonInput} > 
+          <RectButton style={styles.buttonInput} onPress={()=>{handleGoToSearchGame(txtPesquisa)}}> 
                 <Image style={styles.imgLupa} source={require('../../assets/images/lupa.png')} />
             </RectButton>
           </View>
@@ -103,7 +106,7 @@ export default function Home() {
           {jogos.map(function(item){
             return (
               <RectButton style={styles.boxJogo} key={`jogos-${item.id}`} onPress={()=>{handleGoToSearchGame(item.name)}}>
-                <Image style={styles.imgBoxJogo} source={require('../../assets/images/fortniteIMG.png')} />
+                <Image style={styles.imgBoxJogo} source={getGameGroupImage(item.name)} />
                 <Text style={styles.txtBoxJogo}>{item.name}</Text>
               </RectButton>
             )
@@ -114,7 +117,7 @@ export default function Home() {
         </View>
         <View style={styles.menu}>
           <RectButton style={styles.btnMenu}  onPress={handleNavigationToHome}> 
-            <Image style={styles.imgMenu} source={require('../../assets/images/home.png')}/>
+            <Image style={styles.imgMenu} source={require('../../assets/images/home-ativo.png')}/>
           </RectButton> 
           <RectButton style={styles.btnMenu} onPress={handleNavigationToChat}> 
             <Image style={styles.imgMenu} source={require('../../assets/images/chat.png')}/>
@@ -123,7 +126,7 @@ export default function Home() {
             <Image style={styles.imgMenu} source={require('../../assets/images/notificacao.png')}/>
           </RectButton> 
           <RectButton style={styles.btnMenu} onPress={handleNavigationToPerfil}> 
-            <Image style={styles.imgMenu} source={require('../../assets/images/perfil-ativo.png')}/>
+            <Image style={styles.imgMenu} source={require('../../assets/images/perfil.png')}/>
           </RectButton> 
         </View>
         </View>

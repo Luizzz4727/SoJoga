@@ -2,20 +2,26 @@ import { StatusBar } from 'expo-status-bar';
 import { View, Button, Image, ImageBackground, StyleSheet, Text, TextInput, Alert, ScrollView } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback} from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { useRoute } from '@react-navigation/native';
+import api from "../../services/api";
+import formatDate from "../../utils/formatDate";
+import formatTime from "../../utils/formatTime";
+import FlashMessage from "react-native-flash-message";
+import { showMessage, hideMessage } from "react-native-flash-message";
 
 export default function FormPartidas() {
 
+  const [descricao, setDescricao] = useState(false);
   const [datePicker, setDatePicker] = useState(false);
-
   const [date, setDate] = useState(new Date());
-
   const [timePicker, setTimePicker] = useState(false);
-
   const [time, setTime] = useState(new Date(Date.now()));
-
   const navigation = useNavigation();
+  const { params } = useRoute();
+  const {idChat} = params;
+
 
   function handleNavigationToHome() {
     navigation.navigate('Home');
@@ -50,6 +56,42 @@ export default function FormPartidas() {
     setTime(value);
     setTimePicker(false);
   };
+
+  
+  const handleNavigationToPartidas = useCallback(()=>{
+    navigation.navigate('Partidas', {idChat} );
+  },[])
+  
+  async function CriarPartida(){
+console.log(descricao)
+    
+    api.post('/schedule', { 
+      chat_id: idChat,
+      date: formatDate(date),
+      hour: formatTime(time),
+      description: descricao,
+      acao: 'create-schedule'
+    }) 
+    .then(function (response) { 
+      Alert.alert("criou")
+        showMessage({
+          message: "Jogo Adicionado!",
+          type: "Success",
+        });
+        handleNavigationToPartidas()
+    }) 
+    .catch(error => {
+      Alert.alert("nao criou", JSON.stringify(error.response.data))
+        showMessage({
+          message: "Alerta: ",
+          description: error.response.data.message,
+          type: "danger",
+        });
+    });
+    }
+
+
+
 
   return (
     <View style={styles.container}>
@@ -89,7 +131,7 @@ export default function FormPartidas() {
 
           <Text style={styles.tituloDados}>Data da Partida: </Text>
           <View style={styles.DataTime}>
-          <Text style={styles.tituloData}>{date.toDateString()}</Text>
+          <Text style={styles.tituloData}>{formatDate(date)}</Text>
             {!datePicker && (
                 <Button title="Escolher Data" style={styles.btnDateTime} color="#3956FF" onPress={showDatePicker} />
             )}
@@ -97,7 +139,7 @@ export default function FormPartidas() {
 
           <Text style={styles.tituloDados}>Hora da Partida: </Text>
           <View style={styles.DataTime}>
-          <Text style={styles.tituloData}> {time.toLocaleTimeString('en-US')}</Text>
+          <Text style={styles.tituloData}> {formatTime(time)}</Text>
           {!timePicker && (
                 <Button title="Escolher Hora"  color="#3956FF" onPress={showTimePicker} />
             )}
@@ -107,13 +149,17 @@ export default function FormPartidas() {
             <TextInput
               style={styles.inputDesc}
               multiline={true}
-              autoCapitalize="characters"
               autoCorrect={false}
+              onChangeText={setDescricao}
             />
           </View>
           <View style={styles.btnGrupo}>
-            <RectButton style={styles.buttonGrupo} >
-              <Text style={styles.buttonText}>Marcar nova partida</Text>
+            <RectButton style={styles.buttonGrupo} onPress={CriarPartida}>
+              <Text style={styles.buttonText}>Marcar</Text>
+            </RectButton>
+            
+            <RectButton style={styles.buttonVoltar} onPress={handleNavigationToPartidas}>
+              <Text style={styles.buttonText}>Voltar</Text>
             </RectButton>
           </View>
 
@@ -317,7 +363,7 @@ const styles = StyleSheet.create({
   },
 
   buttonGrupo: {
-    width: 210,
+    width: 180,
     height: 40,
     backgroundColor: '#3956FF',
     display: 'flex',
@@ -328,10 +374,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 
+  buttonVoltar: {
+    width: 130,
+    height: 40,
+    backgroundColor: '#474747',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    marginTop: 4,
+    fontSize: 16,
+  },
+
+
   btnGrupo: {
     display: 'flex',
     justifyContent: 'center',
-    flexDirection: 'row',
+    alignItems:'center',
     width: '90%',
   },
 
@@ -389,10 +448,11 @@ const styles = StyleSheet.create({
 
   inputDesc: {
     width: '90%',
-    height: 170,
+    height: 50,
     backgroundColor: '#FFF',
     borderRadius: 15,
     marginBottom: 8,
+    padding:5,
     fontSize: 16,
     shadowColor: "#000000",
     shadowOffset: {

@@ -15,12 +15,23 @@ export default function GruposRoute({groups}) {
         navigation.navigate('Chat',{id});
     }
 
+    function handleNavigationToCriarGrupo() {
+      navigation.navigate('FormGrupos');
+    }
+  
     useEffect(()=>{
         console.log('aquiiix',groups)
     },[groups])
 //Chat
   return (
     <View style={[styles.scene, { backgroundColor: '#FFF' }]}>
+      
+      <View style={styles.btnCriar}>
+            <Text style={styles.txtCriar}>Não achou o que procurava?</Text>
+          <RectButton style={styles.button} onPress={handleNavigationToCriarGrupo}> 
+            <Text style={styles.buttonText}>Criar Grupo</Text> 
+          </RectButton> 
+          </View>
         <View style={styles.bodyRecomendacao}>
         <ScrollView>
             {groups.map((item)=>{
@@ -68,20 +79,19 @@ const styles = StyleSheet.create({
   button: {
     width: 120,
     height: 45,
-    backgroundColor: '#7EDD2A',
+    backgroundColor: '#3956FF',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 10,
     marginBottom: 8,
     marginTop: 8,
-    paddingHorizontal: 24,
     fontSize: 16,
   },
 
   buttonText: {
     fontWeight: 'bold',
-    fontSize: 17,
+    fontSize: 15,
     color: '#FFF'
   },
 
@@ -352,5 +362,20 @@ const styles = StyleSheet.create({
   tituloJogo:{
     fontSize:14,
     color:'#474747'
+  },
+
+  btnCriar:{
+    flexDirection:'row',
+    alignItems:'center',
+    width:'100%',
+    justifyContent:'space-between',
+    paddingLeft:15,
+    paddingRight:10,
+    backgroundColor:'#052199'
+  },
+
+  txtCriar:{
+    fontSize:16,
+    color:'#FFF'
   }
 });

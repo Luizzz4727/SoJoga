@@ -76,7 +76,7 @@ class AuthController extends Controller
         if(empty($user))
             return Helper::geraResponse(401, 'Usuário não encontrado');
 
-        $groups = Chat::select('chats.name', 'chats.path_image', 'chats.created_at', 'users.name as created_by', 'games.name as game', DB::raw('count(chat_participants.chat_id) as participants'))
+        $groups = Chat::select('chats.id', 'chats.name', 'chats.path_image', 'chats.created_at', 'users.name as created_by', 'games.name as game', DB::raw('count(chat_participants.chat_id) as participants'))
                         ->join('games', 'chats.game_id', '=', 'games.id')
                         ->join('users', 'chats.created_by', '=', 'users.id')
                         ->join('chat_participants', 'chats.id', '=', 'chat_participants.chat_id')
@@ -103,9 +103,7 @@ class AuthController extends Controller
 
         if ($request['acao'] == 'update-user') {
 
-            $validIdUser = "required";
-
-            $idUser = $request['idUser'];
+            $idUser = auth()->user()->id;
             $idUserToArray = ",".$idUser;
 
             if(!empty($request['password'])) {
@@ -119,14 +117,13 @@ class AuthController extends Controller
         } else {
 
             $idUserToArray = "";
-            $validIdUser = "";
             $validPass = "required|min:8";
             $validConfirmPass = "required|";
 
         }
 
         $this->validate($request, [
-            'idUser' => $validIdUser,
+            'idUser',
             'acao' => 'required',
             'username' => 'required|max:100|unique:users,username'.$idUserToArray,
             'name' => 'required|max:100',

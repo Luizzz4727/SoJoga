@@ -18,6 +18,7 @@ import PerfilJogador from './pages/PerfilJogador';
 import PerfilADM from './pages/PerfilADM'; 
 import CadastrarJogo from './pages/CadastrarJogo'; 
 import TesteAPI from './pages/TesteAPI'; 
+import EditarPerfil from './pages/EditarPerfil'; 
 
 const AppStack = createStackNavigator(); 
 
@@ -53,6 +54,7 @@ export default function Routes(){
                 <AppStack.Screen name="PerfilADM" component={PerfilADM}/>
                 <AppStack.Screen name="CadastrarJogo" component={CadastrarJogo}/>
                 <AppStack.Screen name="TesteAPI" component={TesteAPI}/>
+                <AppStack.Screen name="EditarPerfil" component={EditarPerfil}/>
 
 
             </AppStack.Navigator> 

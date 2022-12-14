@@ -1,11 +1,15 @@
 import {View, Image, ImageBackground, StyleSheet, Text, TextInput, Alert, ScrollView} from 'react-native'; 
 import {RectButton} from 'react-native-gesture-handler'; 
 import {useNavigation} from '@react-navigation/native'; 
+import { useRoute } from '@react-navigation/native';
+import api from '../../services/api';
 
 export default function PerfilJogador() {
 
   const navigation = useNavigation(); 
 
+  const { params } = useRoute();
+  const {idJogador} = params;
 
   function handleNavigationToHome() {
     navigation.navigate('Home');
