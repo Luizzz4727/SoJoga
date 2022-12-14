@@ -43,9 +43,8 @@ export default function GruposRoute({groups}) {
                 <Text style={styles.txtBoxTopoJogo}>{name}</Text>
                 <Image style={styles.imgBoxJogo} source={getGameGroupImage(game)} />
                 <View style={styles.txtBoxJogo}>
-                    <Text style={styles.txtBoxFimJogo}>Jogadores: {participants}</Text>
-                    <Text style={styles.txtDataBox}>Data de Criação: {formatDate(created_at)}</Text>
                     <Text style={styles.txtBoxFimJogo}>Jogo: {game}</Text>
+                    <Text style={styles.txtDataBox}>Data de Criação: {formatDate(created_at)}</Text>
                     <Text style={styles.txtBoxFimJogo}>Criador: {created_by}</Text>
                 </View>
                 </RectButton>
@@ -271,12 +270,12 @@ const styles = StyleSheet.create({
   },
 
   txtDataBox: {
-    width: '60%',
+    width: '40%',
     paddingLeft: 15
   },
 
   txtBoxFimJogo: {
-    width: '40%',
+    width: '60%',
     paddingLeft: 15
   },
 

@@ -12,8 +12,8 @@ export default function PerfilADM() {
     navigation.navigate('Home');
   }
 
-  function handleNavigationToChat() {
-    navigation.navigate('Chat');
+  function handleNavigationToListaChats() {
+    navigation.navigate('ListaChats');
   }
 
   function handleNavigationToHomeNotificacao() {
@@ -60,7 +60,7 @@ export default function PerfilADM() {
           <RectButton style={styles.btnMenu}  onPress={handleNavigationToHome}> 
             <Image style={styles.imgMenu} source={require('../../assets/images/home.png')}/>
           </RectButton> 
-          <RectButton style={styles.btnMenu} onPress={handleNavigationToChat}> 
+          <RectButton style={styles.btnMenu} onPress={handleNavigationToListaChats}> 
             <Image style={styles.imgMenu} source={require('../../assets/images/chat.png')}/>
           </RectButton> 
           <RectButton style={styles.btnMenu} onPress={handleNavigationToHomeNotificacao}> 

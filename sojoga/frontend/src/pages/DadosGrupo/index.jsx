@@ -31,11 +31,6 @@ export default function DadosGrupo() {
   function handleNavigationToPerfil() {
     navigation.navigate('Perfil');
   }
-
-  const handleNavigationToPartidas = useCallback(()=>{
-    navigation.navigate('Partidas', {idChat} );
-  },[])
-  
   const getDados = async () => {
     try {
 

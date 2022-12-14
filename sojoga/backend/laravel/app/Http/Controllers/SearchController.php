@@ -37,7 +37,7 @@ class SearchController extends Controller
                             ->orWhere('users.username', 'LIKE', "%{$request['search']}%")
                             ->orWhere('games.name', 'LIKE', "%{$request['search']}%")
                             ->groupBy('users.id')
-                            ->toSql();
+                            ->get();
 
         return $this->success(['groups' => $groups, 'players' => $players]);
 

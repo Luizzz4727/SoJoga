@@ -20,8 +20,8 @@ export default function Perfil() {
     navigation.navigate('Home');
   }
 
-  function handleNavigationToChat() {
-    navigation.navigate('Chat');
+  function handleNavigationToListaChats() {
+    navigation.navigate('ListaChats');
   }
 
   function handleNavigationToHomeNotificacao() {
@@ -69,7 +69,7 @@ export default function Perfil() {
       api
       .get("/get/user")
       .then(function (response) {
-        // Alert.alert("a", JSON.stringify(response.data))
+        console.log("a", JSON.stringify(response.data))
         setUser(response.data.user)
         setGrupos(function(lastValue){
           return [...response.data.groups]
@@ -93,11 +93,7 @@ export default function Perfil() {
   const Sair = async () => {
     try {
       api
-      .get("/auth/logout", {
-        headers: {
-          'Authorization': `${token}`
-        }
-      })
+      .get("/auth/logout")
       .then(function (response) {
         showMessage({
           message: "Usuário Desconectado!",
@@ -162,9 +158,6 @@ export default function Perfil() {
         <RectButton style={styles.buttonJogo}  onPress={AddJogo}> 
             <Text style={styles.buttonText}>Adicionar Jogo</Text> 
           </RectButton> 
-          <RectButton style={styles.buttonJogo}  onPress={handleNavigationToDadosGrupo}> 
-            <Text style={styles.buttonText}>Criar Grupo</Text> 
-          </RectButton> 
         </View>
         <Text style={styles.txtTitulo}>Grupos</Text>
         <View style={styles.rolagemGrupos}>
@@ -178,7 +171,7 @@ export default function Perfil() {
               <Text style={styles.tituloGrupo}>{item.name}</Text>
               <View style={styles.gpTxt}>
                 <Text style={styles.tituloJogo}>{item.game}</Text>
-                <Text style={styles.tituloJogo}>{item.participants}</Text>
+                <Text style={styles.tituloJogo}></Text>
               </View>
             </View>
           </View>
@@ -197,7 +190,7 @@ export default function Perfil() {
           <RectButton style={styles.btnMenu}  onPress={handleNavigationToHome}> 
             <Image style={styles.imgMenu} source={require('../../assets/images/home.png')}/>
           </RectButton> 
-          <RectButton style={styles.btnMenu} onPress={handleNavigationToChat}> 
+          <RectButton style={styles.btnMenu} onPress={handleNavigationToListaChats}> 
             <Image style={styles.imgMenu} source={require('../../assets/images/chat.png')}/>
           </RectButton> 
           <RectButton style={styles.btnMenu} onPress={handleNavigationToHomeNotificacao}> 

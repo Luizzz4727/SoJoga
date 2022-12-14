@@ -17,8 +17,8 @@ export default function AdicionarJogo() {
     navigation.navigate('Home');
   }
 
-  function handleNavigationToChat() {
-    navigation.navigate('Chat');
+  function handleNavigationToListaChats() {
+    navigation.navigate('ListaChats');
   }
 
   function handleNavigationToHomeNotificacao() {
@@ -96,15 +96,10 @@ export default function AdicionarJogo() {
   
   async function AdicionarJogo(){
 
-    const token = await AsyncStorage.getItem('@token')
     
     api.post('/games/user', { 
       game_id: selected
-    }, {
-          headers: {
-            'Authorization': `${token}`
-          }
-        }) 
+    }) 
     .then(function (response) { 
         showMessage({
           message: "Jogo Adicionado!",
@@ -162,9 +157,9 @@ export default function AdicionarJogo() {
             <RectButton style={styles.btnMenu}  onPress={handleNavigationToHome}> 
               <Image style={styles.imgMenu} source={require('../../assets/images/home.png')}/>
             </RectButton> 
-            <RectButton style={styles.btnMenu} onPress={handleNavigationToChat}> 
+            <RectButton style={styles.btnMenu} onPress={handleNavigationToListaChats}> 
               <Image style={styles.imgMenu} source={require('../../assets/images/chat.png')}/>
-            </RectButton> 
+            </RectButton>  
             <RectButton style={styles.btnMenu} onPress={handleNavigationToHomeNotificacao}> 
               <Image style={styles.imgMenu} source={require('../../assets/images/notificacao.png')}/>
             </RectButton> 

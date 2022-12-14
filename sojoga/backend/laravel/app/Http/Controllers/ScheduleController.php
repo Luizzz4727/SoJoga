@@ -36,6 +36,8 @@ class ScheduleController extends Controller
         (!isset($data['description'])) ? $data['description'] = NULL : $data['description'] = $data['description'];
         (!isset($data['schedule_id'])) ? $data['schedule_id'] = NULL : $data['schedule_id'] = $data['schedule_id'];
 
+        // return $this->success($data);
+
         $schedule = Schedules::updateOrCreate(
         [
             'id' => $data['schedule_id']

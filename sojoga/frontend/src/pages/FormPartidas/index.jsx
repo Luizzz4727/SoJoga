@@ -19,16 +19,15 @@ export default function FormPartidas() {
   const [timePicker, setTimePicker] = useState(false);
   const [time, setTime] = useState(new Date(Date.now()));
   const navigation = useNavigation();
-  const { params } = useRoute();
-  const {idChat} = params;
 
+  const { params } = useRoute();
 
   function handleNavigationToHome() {
     navigation.navigate('Home');
   }
 
-  function handleNavigationToChat() {
-    navigation.navigate('Chat');
+  function handleNavigationToListaChats() {
+    navigation.navigate('ListaChats');
   }
 
   function handleNavigationToHomeNotificacao() {
@@ -57,23 +56,24 @@ export default function FormPartidas() {
     setTimePicker(false);
   };
 
-  
+  const id = params.params;
   const handleNavigationToPartidas = useCallback(()=>{
-    navigation.navigate('Partidas', {idChat} );
+    navigation.navigate('Partidas', { id } );
   },[])
   
   async function CriarPartida(){
 console.log(descricao)
     
     api.post('/schedule', { 
-      chat_id: idChat,
+      chat_id: id,
       date: formatDate(date),
       hour: formatTime(time),
       description: descricao,
       acao: 'create-schedule'
     }) 
     .then(function (response) { 
-      Alert.alert("criou")
+      // Alert.alert("aaaa", JSON.stringify(response.data))
+      // Alert.alert("criou")
         showMessage({
           message: "Jogo Adicionado!",
           type: "Success",
@@ -81,7 +81,8 @@ console.log(descricao)
         handleNavigationToPartidas()
     }) 
     .catch(error => {
-      Alert.alert("nao criou", JSON.stringify(error.response.data))
+      // Alert.alert("nao criou", JSON.stringify(error.response))
+      // Alert.alert("nao criou", `${formatDate(date)}`)
         showMessage({
           message: "Alerta: ",
           description: error.response.data.message,
@@ -167,9 +168,9 @@ console.log(descricao)
             <RectButton style={styles.btnMenu}  onPress={handleNavigationToHome}> 
               <Image style={styles.imgMenu} source={require('../../assets/images/home.png')}/>
             </RectButton> 
-            <RectButton style={styles.btnMenu} onPress={handleNavigationToChat}> 
+            <RectButton style={styles.btnMenu} onPress={handleNavigationToListaChats}> 
               <Image style={styles.imgMenu} source={require('../../assets/images/chat.png')}/>
-            </RectButton> 
+            </RectButton>  
             <RectButton style={styles.btnMenu} onPress={handleNavigationToHomeNotificacao}> 
               <Image style={styles.imgMenu} source={require('../../assets/images/notificacao.png')}/>
             </RectButton> 

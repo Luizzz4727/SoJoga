@@ -22,8 +22,8 @@ export default function PerfilJogador() {
     navigation.navigate('Home');
   }
 
-  function handleNavigationToChat() {
-    navigation.navigate('Chat');
+  function handleNavigationToListaChats() {
+    navigation.navigate('ListaChats');
   }
 
   function handleNavigationToHomeNotificacao() {
@@ -34,11 +34,42 @@ export default function PerfilJogador() {
     navigation.navigate('Perfil');
   }
 
+
+  async function CriarChat(){
+
+    
+    api.post('/chat', { 
+      user_id: idJogador,
+      name: user?.name,
+      is_private: 1,
+      acao: 'create-chat'
+    }) 
+    .then(function (response) { 
+      Alert.alert("Chat criado com sucesso!!")
+        showMessage({
+          message: "Jogo Adicionado!",
+          type: "Success",
+        });
+        handleNavigationToListaChats();
+    }) 
+    .catch(error => {
+      // Alert.alert("nao criou", JSON.stringify(error.response.data))
+        showMessage({
+          message: "Alerta: ",
+          description: error.response.data.message,
+          type: "danger",
+        });
+    });
+    }
+
+
+
+
   async function getData(){
     
     api.get(`/get/user/${idJogador}`) 
     .then(function (response) {  
-        Alert.alert("foi")
+        // Alert.alert("foi")
         setUser(response.data.user)
         setGrupos(function(lastValue){
           return [...response.data.groups]
@@ -73,8 +104,8 @@ export default function PerfilJogador() {
        style={styles.imgFundo}>
         <View style={styles.topoPerfil}>
           <Image style={styles.imgPerfil} source={require('../../assets/images/gwen.png')}/>
-          <Text style={styles.titulo}>Gwen</Text>
-          <RectButton style={styles.button} > 
+          <Text style={styles.titulo}>{user?.username}</Text>
+          <RectButton style={styles.button} onPress={CriarChat}> 
             <Text style={styles.buttonText}>Conversar</Text> 
           </RectButton> 
         </View>
@@ -117,7 +148,7 @@ export default function PerfilJogador() {
           <RectButton style={styles.btnMenu}  onPress={handleNavigationToHome}> 
             <Image style={styles.imgMenu} source={require('../../assets/images/home.png')}/>
           </RectButton> 
-          <RectButton style={styles.btnMenu} onPress={handleNavigationToChat}> 
+          <RectButton style={styles.btnMenu} onPress={handleNavigationToListaChats}> 
             <Image style={styles.imgMenu} source={require('../../assets/images/chat.png')}/>
           </RectButton> 
           <RectButton style={styles.btnMenu} onPress={handleNavigationToHomeNotificacao}> 

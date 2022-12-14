@@ -4,6 +4,8 @@ import {RectButton} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native'; 
 import { useRoute } from '@react-navigation/native';
 import React, { useState, useEffect, useCallback } from 'react';
+import formatDate from "../../utils/formatDate";
+import formatTime from "../../utils/formatTime";
 import api from "../../services/api";
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -13,14 +15,14 @@ export default function Partidas() {
   let [partidas, setPartidas] = useState([]);
 
   const { params } = useRoute();
-  const {idChat} = params;
+  const { idChat } = params;
 
   function handleNavigationToHome() {
     navigation.navigate('Home');
   }
 
-  function handleNavigationToChat() {
-    navigation.navigate('Chat');
+  function handleNavigationToListaChats() {
+    navigation.navigate('ListaChats');
   }
 
   function handleNavigationToHomeNotificacao() {
@@ -32,17 +34,17 @@ export default function Partidas() {
   }
 
   const handleNavigationToMarcarPartida = useCallback(()=>{
-    navigation.navigate('FormPartidas', {idChat} );
+    navigation.navigate('FormPartidas', {params} );
   },[])
   
-  const handleNavigationToDadosGrupo = useCallback(()=>{
-    navigation.navigate('DadosGrupo', {idChat} );
+  const handleNavigationToChat = useCallback(()=>{
+    navigation.navigate('Chat', {params} );
   },[])
   
   const getDados = async () => {
     try {
       api
-      .get(`/schedule?chat_id=${idChat}`)
+      .get(`/schedule?chat_id=${params}`)
       .then(function (response) {
         setPartidas(function(lastValue){
           return [...response.data.data]
@@ -50,7 +52,7 @@ export default function Partidas() {
       }
       )
       .catch((err) => {
-        console.error(err.response)
+        // Alert.alert('a', `${idChat}`)
       });
 
     } catch(e) {
@@ -93,7 +95,7 @@ export default function Partidas() {
                 <View style={styles.cardPartida}>
                   <View style={styles.data}>
                     <Text style={styles.txtData}>Data:</Text>
-                    <Text style={styles.txtData}>{item?.date}</Text>
+                    <Text style={styles.txtData}>{formatDate(item?.date)}</Text>
                   </View>
                   <View style={styles.hora}>
                     <Text style={styles.txtHora}>Horário:</Text>
@@ -113,7 +115,7 @@ export default function Partidas() {
         <RectButton style={styles.buttonGrupo} onPress={handleNavigationToMarcarPartida}> 
             <Text style={styles.buttonText}>Marcar nova partida</Text> 
           </RectButton> 
-        <RectButton style={styles.buttonVoltar} onPress={handleNavigationToDadosGrupo}> 
+        <RectButton style={styles.buttonVoltar} onPress={handleNavigationToChat}> 
             <Text style={styles.buttonText}>Voltar</Text> 
           </RectButton> 
         </View>
@@ -122,9 +124,9 @@ export default function Partidas() {
           <RectButton style={styles.btnMenu}  onPress={handleNavigationToHome}> 
             <Image style={styles.imgMenu} source={require('../../assets/images/home.png')}/>
           </RectButton> 
-          <RectButton style={styles.btnMenu} onPress={handleNavigationToChat}> 
+          <RectButton style={styles.btnMenu} onPress={handleNavigationToListaChats}> 
             <Image style={styles.imgMenu} source={require('../../assets/images/chat.png')}/>
-          </RectButton> 
+          </RectButton>  
           <RectButton style={styles.btnMenu} onPress={handleNavigationToHomeNotificacao}> 
             <Image style={styles.imgMenu} source={require('../../assets/images/notificacao.png')}/>
           </RectButton> 

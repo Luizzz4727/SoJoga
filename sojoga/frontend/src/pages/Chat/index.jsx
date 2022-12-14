@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import {View, Image, ImageBackground, StyleSheet, Text, TextInput, Alert, ScrollView} from 'react-native'; 
 import {FlatList, RectButton} from 'react-native-gesture-handler'; 
 import {useNavigation, useRoute} from '@react-navigation/native'; 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../../services/api';
 import MyMessage from './components/MyMessage';
@@ -16,6 +16,10 @@ export default function Chat() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isMaxPage, setIsMaxPage] = useState(false);
   const [messages,setMessages] = useState([])
+  const [mensagemUsuario, setMensagemUsuario] = useState();
+  const [isPage, setIsPage] = useState(false)
+  const [nameChat, setNameChat] = useState()
+
   const { params } = useRoute();
 
   const {id} = params
@@ -26,8 +30,8 @@ export default function Chat() {
     navigation.navigate('Home');
   }
 
-  function handleNavigationToChat() {
-    navigation.navigate('Chat');
+  function handleNavigationToListaChats() {
+    navigation.navigate('ListaChats');
   }
 
   function handleNavigationToHomeNotificacao() {
@@ -38,10 +42,10 @@ export default function Chat() {
     navigation.navigate('Perfil');
   }
 
-  const handleNavigationToDadosGrupo = useCallback(()=>{
-    navigation.navigate('DadosGrupo', {id} );
+  const handleNavigationToPartidas = useCallback(()=>{
+    navigation.navigate('Partidas', id );
   },[])
-
+  
 
   const removeDuplicatedFromArrays = (oldArray,newArray,arrayMethod)=>{
     const parsedArray = [...oldArray];
@@ -56,16 +60,31 @@ export default function Chat() {
     return parsedArray;
   }
 
+  async function enviarMsg(){
+    
+    api.post('/chat_message', { 
+      chat_id: id,
+      message: mensagemUsuario
+    }) 
+    .then(function (response) {
+        setMensagemUsuario('')
+    }) 
+    .catch(error => {
+        console.log(error.response)
+    });
+  }
+
+  let getChatLastMessageTimeOut = null; 
+
   const getChatLastMessages = useCallback( async ()=>{
     if(id){
       const url = `/chat_message?chat_id=${id}&page=1`
       const response = await api.get(url)
       const {data} = response.data;
-      setMessages((oldMessages)=>{
-        return removeDuplicatedFromArrays(oldMessages, data, 'unshift')
-      })
+      console.log('getChatLastMessages')
+      setMessages(data);
     }
-  },[id,currentPage])
+  },[id, currentPage, isPage])
 
   const getChatMessagesPagination = useCallback( async ()=>{
     if(id){
@@ -101,6 +120,7 @@ export default function Chat() {
 
   }
 
+
   const updatePagination = ()=>{
     if(!isMaxPage){
       setCurrentPage((lastPage)=>{
@@ -123,6 +143,18 @@ export default function Chat() {
       }
     }
 
+    const getChat = async () =>{
+
+      if(id){
+        const url = `/chat?chat_id=${id}`
+        const response = await api.get(url)
+        const {data} = response.data
+        setNameChat(data.chats.name);
+      }
+    }
+
+  getChat();
+  
     const getChatMessages = async ()=>{
       if(id){
   
@@ -144,19 +176,25 @@ export default function Chat() {
     console.log('currentPage',currentPage)
   },[currentPage]);
 
+  
+  let clearIntervelGabi = null
   useEffect(()=>{
 
-    setInterval(()=>{
-       getChatLastMessages();
-     },1500)
-
+    clearIntervelGabi = setInterval(async () => {
+      getChatLastMessages();
+    }, 2000)
+    
+    return () => {
+      console.log('SAIU')
+      clearInterval(clearIntervelGabi)
+    };
    
   },[])
 
   // Só roda quando chega na ultima página de mensagens
   useEffect(()=>{
     if(isMaxPage){
-      Alert.alert('última mensagem alcançada', 'você chegou na última mensagem')
+      //Alert.alert('última mensagem alcançada', 'você chegou na última mensagem')
     }
   },[isMaxPage]);
   
@@ -169,9 +207,9 @@ export default function Chat() {
         <View style={styles.bodyPartGrupo}>
 
       <View style={styles.topoChat}>
-        <Text style={styles.tituloChat}>Os Grandes Construtores </Text>
-        <RectButton style={styles.buttonDados}  onPress={handleNavigationToDadosGrupo}> 
-            <Text style={styles.buttonTextDados}>Dados do Grupo</Text> 
+        <Text style={styles.tituloChat}>{nameChat}</Text>
+        <RectButton style={styles.buttonDados}  onPress={handleNavigationToPartidas}> 
+            <Text style={styles.buttonTextDados}>Partidas</Text> 
           </RectButton>
       </View>
 
@@ -188,12 +226,13 @@ export default function Chat() {
 
       <View style={styles.msg}>
         <View style={styles.boxInput}>
-        <TextInput 
+          <TextInput
+              value={mensagemUsuario}
               style={styles.input} 
-              autoCapitalize="characters" 
               autoCorrect={false} 
+              onChangeText={setMensagemUsuario}
           /> 
-          <RectButton style={styles.button} > 
+          <RectButton style={styles.button} onPress={enviarMsg}> 
             <Text style={styles.buttonText}>
               <Image source={require('../../assets/images/enviar.png')}/></Text> 
           </RectButton> 
@@ -204,14 +243,14 @@ export default function Chat() {
           <RectButton style={styles.btnMenu}  onPress={handleNavigationToHome}> 
             <Image style={styles.imgMenu} source={require('../../assets/images/home.png')}/>
           </RectButton> 
-          <RectButton style={styles.btnMenu} onPress={handleNavigationToChat}> 
-            <Image style={styles.imgMenu} source={require('../../assets/images/chat.png')}/>
+          <RectButton style={styles.btnMenu} onPress={handleNavigationToListaChats}> 
+            <Image style={styles.imgMenu} source={require('../../assets/images/chat-ativo.png')}/>
           </RectButton> 
           <RectButton style={styles.btnMenu} onPress={handleNavigationToHomeNotificacao}> 
             <Image style={styles.imgMenu} source={require('../../assets/images/notificacao.png')}/>
           </RectButton> 
           <RectButton style={styles.btnMenu} onPress={handleNavigationToPerfil}> 
-            <Image style={styles.imgMenu} source={require('../../assets/images/perfil-ativo.png')}/>
+            <Image style={styles.imgMenu} source={require('../../assets/images/perfil.png')}/>
           </RectButton> 
         </View>
         </View>
@@ -274,14 +313,6 @@ const styles = StyleSheet.create({
     color:'#3956FF',
     fontSize:22,
     fontWeight:'bold'
-  },
-
-  topoChat:{
-    display:'flex',
-    alignItems:'center',
-    justifyContent:'space-between',
-    marginTop:10,
-    height:50,
   },
 
   imgPartidas:{
@@ -509,7 +540,9 @@ const styles = StyleSheet.create({
     display:'flex',
     flexDirection:'row',
     alignItems:'center',
+    justifyContent:'space-around',
     width:'100%',
+    height:50,
     marginTop:10
   },
 
@@ -568,13 +601,18 @@ const styles = StyleSheet.create({
   },
 
   buttonDados:{
-    width:80,
+    width:90,
     height: 40, 
     backgroundColor: '#3956FF', 
     display:'flex',
     alignItems:'center',
     justifyContent:'center',
-    borderRadius: 10
+    borderRadius: 10,
+  },
+
+  buttonTextDados:{
+    color:'#FFF',
+    fontSize:13
   }
 
 

@@ -24,8 +24,8 @@ export default function ResultadoPesquisa() {
     navigation.navigate('Home');
   }
 
-  function handleNavigationToChat() {
-    navigation.navigate('Chat');
+  function handleNavigationToListaChats() {
+    navigation.navigate('ListaChats');
   }
 
   function handleNavigationToHomeNotificacao() {
@@ -54,9 +54,9 @@ export default function ResultadoPesquisa() {
       <View style={styles.rolagemGrupos}>
         <ScrollView style={styles.gp}>
           
-        {jogadores.map(function(item){
+        {jogadores.map(function(item, index){
               return (
-            <RectButton style={styles.grupos} key={`Jogador-${item.id}`} onPress={()=>{
+            <RectButton style={styles.grupos} key={index} onPress={()=>{
               handleNavigateToJogador(item.id)
           }}>
               <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')} />
@@ -158,9 +158,9 @@ export default function ResultadoPesquisa() {
             <RectButton style={styles.btnMenu}  onPress={handleNavigationToHome}> 
               <Image style={styles.imgMenu} source={require('../../assets/images/home.png')}/>
             </RectButton> 
-            <RectButton style={styles.btnMenu} onPress={handleNavigationToChat}> 
-              <Image style={styles.imgMenu} source={require('../../assets/images/chat-ativo.png')}/>
-            </RectButton> 
+            <RectButton style={styles.btnMenu} onPress={handleNavigationToListaChats}> 
+            <Image style={styles.imgMenu} source={require('../../assets/images/chat.png')}/>
+          </RectButton> 
             <RectButton style={styles.btnMenu} onPress={handleNavigationToHomeNotificacao}> 
               <Image style={styles.imgMenu} source={require('../../assets/images/notificacao.png')}/>
             </RectButton> 

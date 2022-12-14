@@ -2,6 +2,9 @@ import { StatusBar } from 'expo-status-bar';
 import {View, Image, ImageBackground, StyleSheet, Text, TextInput, Alert, ScrollView} from 'react-native'; 
 import {RectButton} from 'react-native-gesture-handler'; 
 import {useNavigation} from '@react-navigation/native'; 
+import { useRoute } from '@react-navigation/native';
+import React, { useState, useEffect, useCallback } from 'react';
+import api from "../../services/api";
 
 export default function ParticiparGrupo() {
 
@@ -11,8 +14,8 @@ export default function ParticiparGrupo() {
     navigation.navigate('Home');
   }
 
-  function handleNavigationToChat() {
-    navigation.navigate('Chat');
+  function handleNavigationToListaChats() {
+    navigation.navigate('ListaChats');
   }
 
   function handleNavigationToHomeNotificacao() {
@@ -22,6 +25,36 @@ export default function ParticiparGrupo() {
   function handleNavigationToPerfil() {
     navigation.navigate('Perfil');
   }
+
+  const getDados = async () => {
+    try {
+
+      api
+      .get(`/chat?chat_id=${id}`)
+      .then(function (response) {
+            setChats(response.data.data.chats)
+         console.log('a', JSON.stringify(response.data.data.participants))
+          setParticipantes(function(lastValue){
+            return [...response.data.data.participants]
+          })
+      }
+      )
+      .catch((err) => {
+        Alert.alert('deu ruim', JSON.stringify(response.data))
+        console.error(err.response)
+      });
+
+    } catch(e) {
+      console.error(e)
+    }
+  }
+
+  useEffect(() => {
+    getDados()
+    
+  }, []);
+
+
 
   
   
@@ -82,9 +115,9 @@ export default function ParticiparGrupo() {
           <RectButton style={styles.btnMenu}  onPress={handleNavigationToHome}> 
             <Image style={styles.imgMenu} source={require('../../assets/images/home.png')}/>
           </RectButton> 
-          <RectButton style={styles.btnMenu} onPress={handleNavigationToChat}> 
+          <RectButton style={styles.btnMenu} onPress={handleNavigationToListaChats}> 
             <Image style={styles.imgMenu} source={require('../../assets/images/chat.png')}/>
-          </RectButton> 
+          </RectButton>  
           <RectButton style={styles.btnMenu} onPress={handleNavigationToHomeNotificacao}> 
             <Image style={styles.imgMenu} source={require('../../assets/images/notificacao.png')}/>
           </RectButton> 

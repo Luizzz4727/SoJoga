@@ -22,9 +22,9 @@ class ChatController extends Controller
     {
         $data = $request->validated();
 
-        if(Chat::find($data['chat_id'])->is_private == 0){ // grupo
+        // if(Chat::find($data['chat_id'])->is_private == 0){ // grupo
 
-            $chats = Chat::select('id', 'name', 'path_image')->find($data['chat_id']);
+            $chats = Chat::select('id', 'name', 'path_image', 'is_private')->find($data['chat_id']);
 
             $chatParticipants = ChatParticipant::select('users.id', 'users.name', 'users.username', 'users.path_image')
                                                 ->join('users', 'chat_participants.user_id', '=', 'users.id')
@@ -43,7 +43,7 @@ class ChatController extends Controller
                 'is_participating' => $chatUserLogged
             ]);
 
-        }
+        // }
 
         // $isPrivate = 1;
         // if($request->has('is_private')){
@@ -71,12 +71,25 @@ class ChatController extends Controller
                         ->join('users', 'chats.created_by', '=', 'users.id')
                         ->join('chat_participants', 'chats.id', '=', 'chat_participants.chat_id')
                             ->where('chat_participants.user_id', $userId)
+                            ->where('chats.is_private', 1)
                             ->groupBy('chat_participants.chat_id')
                             ->get();
 
+            $players = Chat::select('chats.id', 'chats.name', 'chats.path_image', 'chats.created_at', 'chats.is_private', 'users.name as created_by', 'games.name as game', DB::raw('count(chat_participants.chat_id) as participants'))
+            ->leftJoin('games', 'chats.game_id', '=', 'games.id')
+            ->join('users', 'chats.created_by', '=', 'users.id')
+            ->join('chat_participants', 'chats.id', '=', 'chat_participants.chat_id')
+                ->where('chat_participants.user_id', $userId)
+                ->where('chats.is_private', 0)
+                ->groupBy('chat_participants.chat_id')
+                ->get();
+    
             
             
-            return $this->success($groups);
+            return $this->success([
+                'groups' => $groups,
+                'players' => $players
+            ]);
 
         // }
     }

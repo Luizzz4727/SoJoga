@@ -1,7 +1,7 @@
 import { View, Button, Image, ImageBackground, StyleSheet, Text, TextInput, Alert, ScrollView } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback} from 'react';
 import SelectList from 'react-native-dropdown-select-list';
 import api from "../../services/api";
 import FlashMessage from "react-native-flash-message";
@@ -20,8 +20,8 @@ export default function FormGrupos() {
     navigation.navigate('Home');
   }
 
-  function handleNavigationToChat() {
-    navigation.navigate('Chat');
+  function handleNavigationToListaChats() {
+    navigation.navigate('ListaChats');
   }
 
   function handleNavigationToHomeNotificacao() {
@@ -32,7 +32,6 @@ export default function FormGrupos() {
     navigation.navigate('Perfil');
   }
 
-    
   const getJogos = async () => {
     try {
 
@@ -70,13 +69,14 @@ export default function FormGrupos() {
       acao: 'create-chat'
     }) 
     .then(function (response) { 
-      // Alert.alert("criou")
+      Alert.alert("Jogo criado com sucesso!!")
         showMessage({
           message: "Jogo Adicionado!",
           type: "Success",
         });
   
-        handleNavigationToHome()
+        
+        handleNavigationToListaChats()
     }) 
     .catch(error => {
       // Alert.alert("nao criou", JSON.stringify(error.response.data))
@@ -138,14 +138,14 @@ export default function FormGrupos() {
             <RectButton style={styles.btnMenu}  onPress={handleNavigationToHome}> 
               <Image style={styles.imgMenu} source={require('../../assets/images/home.png')}/>
             </RectButton> 
-            <RectButton style={styles.btnMenu} onPress={handleNavigationToChat}> 
-              <Image style={styles.imgMenu} source={require('../../assets/images/chat.png')}/>
+            <RectButton style={styles.btnMenu} onPress={handleNavigationToListaChats}> 
+              <Image style={styles.imgMenu} source={require('../../assets/images/chat-ativo.png')}/>
             </RectButton> 
             <RectButton style={styles.btnMenu} onPress={handleNavigationToHomeNotificacao}> 
               <Image style={styles.imgMenu} source={require('../../assets/images/notificacao.png')}/>
             </RectButton> 
             <RectButton style={styles.btnMenu} onPress={handleNavigationToPerfil}> 
-              <Image style={styles.imgMenu} source={require('../../assets/images/perfil-ativo.png')}/>
+              <Image style={styles.imgMenu} source={require('../../assets/images/perfil.png')}/>
             </RectButton> 
           </View>
         </View>
