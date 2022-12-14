@@ -16,8 +16,6 @@ class SearchController extends Controller
 
         $data = $request->validated();
 
-
-        // PAREI AQUI -- trazer dados da pesquisa de grupos
         $groups = Chat::select('chats.name','chats.id', 'chats.path_image', 'chats.created_at', 'users.name as created_by', 'games.name as game', DB::raw('count(chat_participants.chat_id) as participants'))
                         ->join('games', 'chats.game_id', '=', 'games.id')
                         ->join('users', 'chats.created_by', '=', 'users.id')
@@ -33,13 +31,13 @@ class SearchController extends Controller
                                 'users.name as username',
                                 DB::raw("GROUP_CONCAT(`games`.`name` SEPARATOR ', ') as games")
                                )
-                         ->join('game_users', 'users.id', '=', 'game_users.user_id')
-                         ->join('games', 'game_users.game_id', '=', 'games.id')
+                         ->leftJoin('game_users', 'users.id', '=', 'game_users.user_id')
+                         ->leftJoin('games', 'game_users.game_id', '=', 'games.id')
                             ->where('users.name', 'LIKE', "%{$request['search']}%")
                             ->orWhere('users.username', 'LIKE', "%{$request['search']}%")
                             ->orWhere('games.name', 'LIKE', "%{$request['search']}%")
                             ->groupBy('users.id')
-                            ->get();
+                            ->toSql();
 
         return $this->success(['groups' => $groups, 'players' => $players]);
 

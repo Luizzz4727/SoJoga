@@ -66,7 +66,7 @@ class ChatController extends Controller
 
             $userId = auth()->user()->id;
 
-            $groups = Chat::select('chats.id', 'chats.name', 'chats.path_image', 'chats.created_at', 'users.name as created_by', 'games.name as game', DB::raw('count(chat_participants.chat_id) as participants'))
+            $groups = Chat::select('chats.id', 'chats.name', 'chats.path_image', 'chats.created_at', 'chats.is_private', 'users.name as created_by', 'games.name as game', DB::raw('count(chat_participants.chat_id) as participants'))
                         ->leftJoin('games', 'chats.game_id', '=', 'games.id')
                         ->join('users', 'chats.created_by', '=', 'users.id')
                         ->join('chat_participants', 'chats.id', '=', 'chat_participants.chat_id')

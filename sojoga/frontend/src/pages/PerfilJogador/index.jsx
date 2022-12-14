@@ -3,10 +3,17 @@ import {RectButton} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native'; 
 import { useRoute } from '@react-navigation/native';
 import api from '../../services/api';
+import React, {useState, useEffect} from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function PerfilJogador() {
 
   const navigation = useNavigation(); 
+
+  let [user, setUser] = useState();
+  let [jogos, setJogos] = useState([]);
+  let [grupos, setGrupos] = useState([]);
 
   const { params } = useRoute();
   const {idJogador} = params;
@@ -27,6 +34,38 @@ export default function PerfilJogador() {
     navigation.navigate('Perfil');
   }
 
+  async function getData(){
+    
+    api.get(`/get/user/${idJogador}`) 
+    .then(function (response) {  
+        Alert.alert("foi")
+        setUser(response.data.user)
+        setGrupos(function(lastValue){
+          return [...response.data.groups]
+        })
+        setJogos(function(lastValue){
+          return [...response.data.games]
+        })
+
+    }) 
+    .catch(error => {
+        Alert.alert("nao foi", error.response.data.message)
+    });
+  }
+
+  useEffect(() => {
+
+    getData()
+    
+  }, []);
+
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getData()
+    }, [])
+  );
+
   return (
     <View style={styles.container}>
 
@@ -45,12 +84,11 @@ export default function PerfilJogador() {
         <ScrollView
           horizontal={true}
         >
-          <Image style={styles.imgJogo} source={require('../../assets/images/logo-fortnite.png')}/>
-          <Image style={styles.imgJogo} source={require('../../assets/images/logo-fortnite.png')}/>
-          <Image style={styles.imgJogo} source={require('../../assets/images/logo-fortnite.png')}/>
-          <Image style={styles.imgJogo} source={require('../../assets/images/logo-fortnite.png')}/>
-          <Image style={styles.imgJogo} source={require('../../assets/images/logo-fortnite.png')}/>
-          <Image style={styles.imgJogo} source={require('../../assets/images/logo-fortnite.png')}/>
+          {jogos.map(function(item){
+            return (
+              <Image key={`jogo-${item.id}`} style={styles.imgJogo} source={require('../../assets/images/logo-fortnite.png')}/>
+            )
+          })}
         </ScrollView>
         </View>
         <View style={styles.btnjogo}>
@@ -58,38 +96,20 @@ export default function PerfilJogador() {
         <Text style={styles.txtTitulo}>Grupos</Text>
         <View style={styles.rolagemGrupos}>
         <ScrollView  style={styles.gp}>
-          <View  style={styles.grupos}>
-              <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')}/>
-            <View style={styles.txtGrupos}>
-              <Text style={styles.tituloGrupo}>Os Grandes Construtores</Text>
-              <View style={styles.gpTxt}>
-                <Text style={styles.tituloJogo}>Fortnite</Text>
-                <Text style={styles.tituloJogo}>3/4</Text>
+          {grupos.map(function(item){
+              return (
+                <View  style={styles.grupos} key={`grupo-${item.id}`}>
+                <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')}/>
+                <View style={styles.txtGrupos}>
+                <Text style={styles.tituloGrupo}>{item.name}</Text>
+                <View style={styles.gpTxt}>
+                  <Text style={styles.tituloJogo}>{item.game}</Text>
+                  <Text style={styles.tituloJogo}>{item.participants}</Text>
+                </View>
               </View>
             </View>
-          </View>
-
-          <View  style={styles.grupos}>
-              <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')}/>
-            <View style={styles.txtGrupos}>
-              <Text style={styles.tituloGrupo}>Os Grandes Construtores</Text>
-              <View style={styles.gpTxt}>
-                <Text style={styles.tituloJogo}>Fortnite</Text>
-                <Text style={styles.tituloJogo}>3/4</Text>
-              </View>
-            </View>
-          </View>
-
-          <View  style={styles.grupos}>
-              <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')}/>
-            <View style={styles.txtGrupos}>
-              <Text style={styles.tituloGrupo}>Os Grandes Construtores</Text>
-              <View style={styles.gpTxt}>
-                <Text style={styles.tituloJogo}>Fortnite</Text>
-                <Text style={styles.tituloJogo}>3/4</Text>
-              </View>
-            </View>
-          </View>
+              )
+            })}
         </ScrollView>
         </View>
         
