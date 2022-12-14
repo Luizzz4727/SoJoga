@@ -19,6 +19,7 @@ import PerfilADM from './pages/PerfilADM';
 import CadastrarJogo from './pages/CadastrarJogo'; 
 import TesteAPI from './pages/TesteAPI'; 
 import EditarPerfil from './pages/EditarPerfil'; 
+import ListaChats from './pages/ListaChats'; 
 
 const AppStack = createStackNavigator(); 
 
@@ -55,6 +56,7 @@ export default function Routes(){
                 <AppStack.Screen name="CadastrarJogo" component={CadastrarJogo}/>
                 <AppStack.Screen name="TesteAPI" component={TesteAPI}/>
                 <AppStack.Screen name="EditarPerfil" component={EditarPerfil}/>
+                <AppStack.Screen name="ListaChats" component={ListaChats}/>
 
 
             </AppStack.Navigator> 
