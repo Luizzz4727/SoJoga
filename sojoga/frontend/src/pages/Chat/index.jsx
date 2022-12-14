@@ -2,291 +2,20 @@ import { StatusBar } from 'expo-status-bar';
 import {View, Image, ImageBackground, StyleSheet, Text, TextInput, Alert, ScrollView} from 'react-native'; 
 import {FlatList, RectButton} from 'react-native-gesture-handler'; 
 import {useNavigation, useRoute} from '@react-navigation/native'; 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../../services/api';
 import MyMessage from './components/MyMessage';
 import OtherMessage from './components/OtherMessage';
 
-const data = [
-  {
-      "id": 29,
-      "chat_id": 1,
-      "user_id": 2,
-      "message": "usuario vini",
-      "created_at": "2022-12-14T02:04:34.000000Z",
-      "updated_at": "2022-12-14T02:04:34.000000Z",
-      "user": {
-          "id": 2,
-          "username": "vini",
-          "name": "vini",
-          "email": "vini@email.com",
-          "status": "A",
-          "path_image": null,
-          "created_at": "2022-12-13T21:27:46.000000Z",
-          "updated_at": "2022-12-13T21:27:46.000000Z"
-      }
-  },
-  {
-      "id": 28,
-      "chat_id": 1,
-      "user_id": 1,
-      "message": "eaeee dale",
-      "created_at": "2022-12-14T01:37:31.000000Z",
-      "updated_at": "2022-12-14T01:37:31.000000Z",
-      "user": {
-          "id": 1,
-          "username": "luizao",
-          "name": "Luiz",
-          "email": "luiz@gmail.com",
-          "status": "A",
-          "path_image": null,
-          "created_at": "2022-12-13T21:27:08.000000Z",
-          "updated_at": "2022-12-13T21:27:08.000000Z"
-      }
-  },
-  {
-      "id": 27,
-      "chat_id": 1,
-      "user_id": 1,
-      "message": "eaeee dale",
-      "created_at": "2022-12-14T01:37:30.000000Z",
-      "updated_at": "2022-12-14T01:37:30.000000Z",
-      "user": {
-          "id": 1,
-          "username": "luizao",
-          "name": "Luiz",
-          "email": "luiz@gmail.com",
-          "status": "A",
-          "path_image": null,
-          "created_at": "2022-12-13T21:27:08.000000Z",
-          "updated_at": "2022-12-13T21:27:08.000000Z"
-      }
-  },
-  {
-      "id": 26,
-      "chat_id": 1,
-      "user_id": 1,
-      "message": "eaeee dale",
-      "created_at": "2022-12-14T01:37:28.000000Z",
-      "updated_at": "2022-12-14T01:37:28.000000Z",
-      "user": {
-          "id": 1,
-          "username": "luizao",
-          "name": "Luiz",
-          "email": "luiz@gmail.com",
-          "status": "A",
-          "path_image": null,
-          "created_at": "2022-12-13T21:27:08.000000Z",
-          "updated_at": "2022-12-13T21:27:08.000000Z"
-      }
-  },
-  {
-      "id": 25,
-      "chat_id": 1,
-      "user_id": 1,
-      "message": "eaeee dale",
-      "created_at": "2022-12-14T01:37:26.000000Z",
-      "updated_at": "2022-12-14T01:37:26.000000Z",
-      "user": {
-          "id": 1,
-          "username": "luizao",
-          "name": "Luiz",
-          "email": "luiz@gmail.com",
-          "status": "A",
-          "path_image": null,
-          "created_at": "2022-12-13T21:27:08.000000Z",
-          "updated_at": "2022-12-13T21:27:08.000000Z"
-      }
-  },
-  {
-      "id": 24,
-      "chat_id": 1,
-      "user_id": 1,
-      "message": "eaeee dale",
-      "created_at": "2022-12-14T01:37:25.000000Z",
-      "updated_at": "2022-12-14T01:37:25.000000Z",
-      "user": {
-          "id": 1,
-          "username": "luizao",
-          "name": "Luiz",
-          "email": "luiz@gmail.com",
-          "status": "A",
-          "path_image": null,
-          "created_at": "2022-12-13T21:27:08.000000Z",
-          "updated_at": "2022-12-13T21:27:08.000000Z"
-      }
-  },
-  {
-      "id": 23,
-      "chat_id": 1,
-      "user_id": 1,
-      "message": "eaeee dale",
-      "created_at": "2022-12-14T01:37:24.000000Z",
-      "updated_at": "2022-12-14T01:37:24.000000Z",
-      "user": {
-          "id": 1,
-          "username": "luizao",
-          "name": "Luiz",
-          "email": "luiz@gmail.com",
-          "status": "A",
-          "path_image": null,
-          "created_at": "2022-12-13T21:27:08.000000Z",
-          "updated_at": "2022-12-13T21:27:08.000000Z"
-      }
-  },
-  {
-      "id": 22,
-      "chat_id": 1,
-      "user_id": 1,
-      "message": "eaeee dale",
-      "created_at": "2022-12-14T01:37:22.000000Z",
-      "updated_at": "2022-12-14T01:37:22.000000Z",
-      "user": {
-          "id": 1,
-          "username": "luizao",
-          "name": "Luiz",
-          "email": "luiz@gmail.com",
-          "status": "A",
-          "path_image": null,
-          "created_at": "2022-12-13T21:27:08.000000Z",
-          "updated_at": "2022-12-13T21:27:08.000000Z"
-      }
-  },
-  {
-      "id": 21,
-      "chat_id": 1,
-      "user_id": 1,
-      "message": "eaeee dale",
-      "created_at": "2022-12-14T01:37:21.000000Z",
-      "updated_at": "2022-12-14T01:37:21.000000Z",
-      "user": {
-          "id": 1,
-          "username": "luizao",
-          "name": "Luiz",
-          "email": "luiz@gmail.com",
-          "status": "A",
-          "path_image": null,
-          "created_at": "2022-12-13T21:27:08.000000Z",
-          "updated_at": "2022-12-13T21:27:08.000000Z"
-      }
-  },
-  {
-      "id": 20,
-      "chat_id": 1,
-      "user_id": 1,
-      "message": "eaeee dale",
-      "created_at": "2022-12-14T01:37:20.000000Z",
-      "updated_at": "2022-12-14T01:37:20.000000Z",
-      "user": {
-          "id": 1,
-          "username": "luizao",
-          "name": "Luiz",
-          "email": "luiz@gmail.com",
-          "status": "A",
-          "path_image": null,
-          "created_at": "2022-12-13T21:27:08.000000Z",
-          "updated_at": "2022-12-13T21:27:08.000000Z"
-      }
-  },
-  {
-      "id": 19,
-      "chat_id": 1,
-      "user_id": 1,
-      "message": "eaeee dale",
-      "created_at": "2022-12-14T01:37:19.000000Z",
-      "updated_at": "2022-12-14T01:37:19.000000Z",
-      "user": {
-          "id": 1,
-          "username": "luizao",
-          "name": "Luiz",
-          "email": "luiz@gmail.com",
-          "status": "A",
-          "path_image": null,
-          "created_at": "2022-12-13T21:27:08.000000Z",
-          "updated_at": "2022-12-13T21:27:08.000000Z"
-      }
-  },
-  {
-      "id": 18,
-      "chat_id": 1,
-      "user_id": 1,
-      "message": "eaeee dale",
-      "created_at": "2022-12-14T01:37:17.000000Z",
-      "updated_at": "2022-12-14T01:37:17.000000Z",
-      "user": {
-          "id": 1,
-          "username": "luizao",
-          "name": "Luiz",
-          "email": "luiz@gmail.com",
-          "status": "A",
-          "path_image": null,
-          "created_at": "2022-12-13T21:27:08.000000Z",
-          "updated_at": "2022-12-13T21:27:08.000000Z"
-      }
-  },
-  {
-      "id": 17,
-      "chat_id": 1,
-      "user_id": 1,
-      "message": "eaeee dale",
-      "created_at": "2022-12-14T01:37:16.000000Z",
-      "updated_at": "2022-12-14T01:37:16.000000Z",
-      "user": {
-          "id": 1,
-          "username": "luizao",
-          "name": "Luiz",
-          "email": "luiz@gmail.com",
-          "status": "A",
-          "path_image": null,
-          "created_at": "2022-12-13T21:27:08.000000Z",
-          "updated_at": "2022-12-13T21:27:08.000000Z"
-      }
-  },
-  {
-      "id": 16,
-      "chat_id": 1,
-      "user_id": 1,
-      "message": "eaeee dale",
-      "created_at": "2022-12-14T01:37:14.000000Z",
-      "updated_at": "2022-12-14T01:37:14.000000Z",
-      "user": {
-          "id": 1,
-          "username": "luizao",
-          "name": "Luiz",
-          "email": "luiz@gmail.com",
-          "status": "A",
-          "path_image": null,
-          "created_at": "2022-12-13T21:27:08.000000Z",
-          "updated_at": "2022-12-13T21:27:08.000000Z"
-      }
-  },
-  {
-      "id": 15,
-      "chat_id": 1,
-      "user_id": 1,
-      "message": "eaeee dale",
-      "created_at": "2022-12-14T01:37:12.000000Z",
-      "updated_at": "2022-12-14T01:37:12.000000Z",
-      "user": {
-          "id": 1,
-          "username": "luizao",
-          "name": "Luiz",
-          "email": "luiz@gmail.com",
-          "status": "A",
-          "path_image": null,
-          "created_at": "2022-12-13T21:27:08.000000Z",
-          "updated_at": "2022-12-13T21:27:08.000000Z"
-      }
-  }
-]
 
 
 export default function Chat() {
 
   const [currentUser, setCurrentUser] = useState({})
-  const [currentPage, setCurrent] = useState(1);
-  const [messages,setMessages] = useState(data)
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isMaxPage, setIsMaxPage] = useState(false);
+  const [messages,setMessages] = useState([])
   const { params } = useRoute();
 
   const {id} = params
@@ -309,7 +38,79 @@ export default function Chat() {
     navigation.navigate('Perfil');
   }
 
+
+  const removeDuplicatedFromArrays = (oldArray,newArray,arrayMethod)=>{
+    const parsedArray = [...oldArray];
+    newArray.forEach((item)=>{
+      var currentId = item.id;
+      var isNotDuplicated = !parsedArray.some((item)=>item.id === currentId);
+      if(isNotDuplicated){
+        arrayMethod === 'unshift'? parsedArray.unshift(item) : parsedArray.push(item)
+      }
+    })
+
+    return parsedArray;
+  }
+
+  const getChatLastMessages = useCallback( async ()=>{
+    if(id){
+      const url = `/chat_message?chat_id=${id}&page=1`
+      const response = await api.get(url)
+      const {data} = response.data;
+      setMessages((oldMessages)=>{
+        return removeDuplicatedFromArrays(oldMessages, data, 'unshift')
+      })
+    }
+  },[id,currentPage])
+
+  const getChatMessagesPagination = useCallback( async ()=>{
+    if(id){
+
+      const url = `/chat_message?chat_id=${id}&page=${currentPage}`
+      const response = await api.get(url)
+      const {data} = response.data;
+
+      if(data.length < 15){
+        setIsMaxPage(true)
+      }
+
+      setMessages((oldMessages)=>{
+        return removeDuplicatedFromArrays(oldMessages, data)
+      })
+    }
+  },[id,currentPage])
+
+
+
+
+  const renderItem = ({item})=>{
+  
+    const isCurrentUserMessage = item.user_id === currentUser.id;
+
+    if(isCurrentUserMessage){
+      return <MyMessage message={item.message} time={item.created_at}/>
+    }
+
+    return <OtherMessage message={item.message} time={item.created_at} userName={item.user.username}/>
+
+    
+
+  }
+
+  const updatePagination = ()=>{
+    if(!isMaxPage){
+      setCurrentPage((lastPage)=>{
+        return lastPage + 1
+      })
+    }
+  }
+
+  // só roda no primeiro carregamento para zerar algumas informações e pegar as primeiras mensagens
   useEffect(()=>{
+
+    setCurrentPage(1);
+    setIsMaxPage(false);
+    setMessages([])
     const getUserData = async ()=>{
       const user = await AsyncStorage.getItem('@user');
 
@@ -319,37 +120,42 @@ export default function Chat() {
     }
 
     const getChatMessages = async ()=>{
-
       if(id){
-        const response = await api.get(`/chat_message?chat_id=${id}&page=${currentPage}`)
-
-        const {data} = response
+  
+        const url = `/chat_message?chat_id=${id}&page=${currentPage}`
+        const response = await api.get(url)
+        const {data} = response.data
+  
+        setMessages([...data])
       }
     }
-
-    getUserData()
+    getUserData();
+    getChatMessages();
   },[])
 
+  // Só roda quando ocorre a paginação
   useEffect(()=>{
-console.log('usuarioLogado', currentUser)
-  },[currentUser])
+    getChatMessagesPagination()
 
+    console.log('currentPage',currentPage)
+  },[currentPage]);
 
-  const renderItem = ({item})=>{
-     console.log('item', item.user_id)
-     console.log('currentUser', currentUser.id)
-     console.log('_______')
-    const isCurrentUserMessage = item.user_id === currentUser.id;
+  useEffect(()=>{
 
-    if(isCurrentUserMessage){
-      return <MyMessage message={item.message} time={item.created_at}/>
+    setInterval(()=>{
+       getChatLastMessages();
+     },1500)
+
+   
+  },[])
+
+  // Só roda quando chega na ultima página de mensagens
+  useEffect(()=>{
+    if(isMaxPage){
+      Alert.alert('última mensagem alcançada', 'você chegou na última mensagem')
     }
-
-    return <OtherMessage message={item.message} time={item.created_at}/>
-
-    
-
-  }
+  },[isMaxPage]);
+  
 
   return (
     <View style={styles.container}>
@@ -365,9 +171,11 @@ console.log('usuarioLogado', currentUser)
 
       <View style={styles.rolagemChat}>
       <FlatList
+        inverted
         data={messages}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
+        onEndReached={updatePagination}
         // extraData={selectedId}
       />
         </View>

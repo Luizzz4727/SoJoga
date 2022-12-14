@@ -7,10 +7,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import formatTime from '../../../../utils/formatTime';
 
 
-export default function OtherMessage({message, time}) {
+export default function OtherMessage({message, time, userName}) {
   return (
-  <View style={styles.boxPropria}>
-    <View style={styles.boxMsg}>
+    <View style={styles.boxJogador}>
+    <View style={styles.boxMsgJogador}>
+      <Text style={styles.tituloJogador}>{userName}</Text>
       <Text style={styles.msgs}>{message}</Text>
       <Text style={styles.horaMsg}>{formatTime(time)}</Text>
     </View>
