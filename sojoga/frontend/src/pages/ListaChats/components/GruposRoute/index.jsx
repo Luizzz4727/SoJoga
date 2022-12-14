@@ -31,7 +31,7 @@ export default function GruposRoute({groups}) {
             {groups.map(function(item, index){
               return (
                 <RectButton style={styles.boxJogo} key={index} onPress={()=>{
-                    handleNavigateToChat(id)
+                    handleNavigateToChat(item.id)
                 }}>
                 <View  style={styles.grupos} key={`grupo-${item.id}`}>
                 <Image style={styles.imgGrupo} source={require('../../../../assets/images/gwen.png')}/>

@@ -18,7 +18,7 @@ class ChatController extends Controller
      * @param GetChatRequest $request
      * @return JsonResponse
      */
-    public function index(GetChatRequest $request) : JsonResponse 
+    public function index(GetChatRequest $request) : JsonResponse
     {
         $data = $request->validated();
 
@@ -30,7 +30,7 @@ class ChatController extends Controller
                                                 ->join('users', 'chat_participants.user_id', '=', 'users.id')
                                                 ->where('chat_participants.chat_id', $data['chat_id'])
                                                 ->get();
-            
+
 
             if(!empty(ChatParticipant::where('chat_id', $data['chat_id'])->where('user_id', auth()->user()->id)->first()))
                 $chatUserLogged = 1;
@@ -59,14 +59,14 @@ class ChatController extends Controller
 
         // return $this->success($chatParticipants);
     }
-    
-    public function getAllChats() : JsonResponse 
+
+    public function getAllChats() : JsonResponse
     {
         // $data = $request->validated();
 
             $userId = auth()->user()->id;
 
-            $groups = Chat::select('chats.id', 'chats.name', 'chats.path_image', 'chats.created_at', 'chats.is_private', 'users.name as created_by', 'games.name as game', DB::raw('count(chat_participants.chat_id) as participants'))
+            $players = Chat::select('chats.id', 'chats.name', 'chats.path_image', 'chats.created_at', 'chats.is_private', 'users.name as created_by', 'games.name as game', DB::raw('count(chat_participants.chat_id) as participants'))
                         ->leftJoin('games', 'chats.game_id', '=', 'games.id')
                         ->join('users', 'chats.created_by', '=', 'users.id')
                         ->join('chat_participants', 'chats.id', '=', 'chat_participants.chat_id')
@@ -75,7 +75,7 @@ class ChatController extends Controller
                             ->groupBy('chat_participants.chat_id')
                             ->get();
 
-            $players = Chat::select('chats.id', 'chats.name', 'chats.path_image', 'chats.created_at', 'chats.is_private', 'users.name as created_by', 'games.name as game', DB::raw('count(chat_participants.chat_id) as participants'))
+            $groups = Chat::select('chats.id', 'chats.name', 'chats.path_image', 'chats.created_at', 'chats.is_private', 'users.name as created_by', 'games.name as game', DB::raw('count(chat_participants.chat_id) as participants'))
             ->leftJoin('games', 'chats.game_id', '=', 'games.id')
             ->join('users', 'chats.created_by', '=', 'users.id')
             ->join('chat_participants', 'chats.id', '=', 'chat_participants.chat_id')
@@ -83,9 +83,9 @@ class ChatController extends Controller
                 ->where('chats.is_private', 0)
                 ->groupBy('chat_participants.chat_id')
                 ->get();
-    
-            
-            
+
+
+
             return $this->success([
                 'groups' => $groups,
                 'players' => $players
@@ -100,7 +100,7 @@ class ChatController extends Controller
      * @param StoreChatRequest $request
      * @return void
      */
-    public function store(StoreChatRequest $request) 
+    public function store(StoreChatRequest $request)
     {
 
         $data = $request->validated();
@@ -131,7 +131,7 @@ class ChatController extends Controller
                     ]
                 ]);
             }
-            
+
 
             $chat->refresh()->load('lastMessage.user','participants.user');
             return $this->success($chat);
@@ -141,12 +141,12 @@ class ChatController extends Controller
         } else { // privado
 
             $otherUserId = (int)$data['user_id'];
-        
+
             $previousChat = $this->getPreviousChat($otherUserId);
 
             if($previousChat == null){
-                
-                
+
+
 
                 $chat = Chat::create([
                     'created_by' => $data['created_by'],
@@ -162,16 +162,16 @@ class ChatController extends Controller
                         'user_id' => $otherUserId
                     ]
                 ]);
-    
+
                 $chat->refresh()->load('lastMessage.user','participants.user');
                 return $this->success($chat);
-    
+
             }
-    
+
             return $this->success($previousChat->load('lastMessage.user','participants.user'));
-        
+
         }
-      
+
     }
 
     /**

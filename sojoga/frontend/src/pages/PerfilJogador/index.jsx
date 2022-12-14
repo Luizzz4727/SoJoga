@@ -80,7 +80,8 @@ export default function PerfilJogador() {
 
     }) 
     .catch(error => {
-        Alert.alert("nao foi", error.response.data.message)
+      // console.error(error)
+        Alert.alert("nao foi", JSON.stringify(error.response))
     });
   }
 

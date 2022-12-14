@@ -41,9 +41,9 @@ export default function ListaChats() {
   // },[])
 
   
-//   const handleNavigateToJogador = (idJogador)=>{
-//     navigation.navigate('PerfilJogador',{idJogador});
-// }
+  const handleNavigateToJogador = (idJogador)=>{
+    navigation.navigate('PerfilJogador',{idJogador});
+}
   
 
   const [jogadores, setJogadores] = useState([])
@@ -60,7 +60,7 @@ export default function ListaChats() {
               <Image style={styles.imgGrupo} source={require('../../assets/images/gwen.png')} />
               <View style={styles.txtJogador}>
                 <Text style={styles.tituloGrupo}>{item.name}</Text>
-                <Text style={styles.tituloJogo}>Jogador de {item.games}</Text>
+                {item.game && (<Text style={styles.tituloJogo}>Jogador de {item.games}</Text>)}
               </View>
             </RectButton>
                 )
@@ -84,8 +84,8 @@ export default function ListaChats() {
     api.get(`/chats/user`).then((response)=>{
 
       // Alert.alert('a', JSON.stringify(response.data))
-      setGroups([...response.data.data.players])
-      setJogadores([...response.data.data.groups])
+      setGroups([...response.data.data.groups])
+      setJogadores([...response.data.data.players])
     })
 
    },[])
