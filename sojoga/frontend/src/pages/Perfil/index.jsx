@@ -8,6 +8,7 @@ import api from "../../services/api";
 import FlashMessage from "react-native-flash-message";
 import { showMessage, hideMessage } from "react-native-flash-message";
 import { useFocusEffect } from '@react-navigation/native';
+import getGameLogoImage from '../../utils/gameLogoImage';
 
 
 
@@ -148,7 +149,7 @@ export default function Perfil() {
         >
           {jogos.map(function(item){
             return (
-              <Image key={`jogo-${item.id}`} style={styles.imgJogo} source={require('../../assets/images/logo-fortnite.png')}/>
+              <Image key={`jogo-${item.id}`} style={styles.imgJogo} source={getGameLogoImage(item.name)}/>
             )
           })}
 
